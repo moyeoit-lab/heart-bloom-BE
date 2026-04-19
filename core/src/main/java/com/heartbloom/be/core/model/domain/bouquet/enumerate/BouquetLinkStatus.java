@@ -2,6 +2,8 @@ package com.heartbloom.be.core.model.domain.bouquet.enumerate;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum BouquetLinkStatus {
 
@@ -16,6 +18,13 @@ public enum BouquetLinkStatus {
                       String description) {
         this.serializedValue = serializedValue;
         this.description = description;
+    }
+
+    public static BouquetLinkStatus findByCode(String code) {
+        return Arrays.stream(values())
+                .filter(status -> status.name().equalsIgnoreCase(code))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unknown BouquetLinkStatus: " + code));
     }
 
 }

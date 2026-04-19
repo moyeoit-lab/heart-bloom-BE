@@ -30,8 +30,12 @@ public class BouquetTypeEntity extends BaseEntity {
     @Column(name = "is_active", nullable = false)
     private Boolean active;
 
-    @Builder
-    public BouquetTypeEntity(String bouquetName, String bouquetDescription, String bouquetImageUrl, Boolean active) {
+    public BouquetTypeEntity(Long id,
+                             String bouquetName,
+                             String bouquetDescription,
+                             String bouquetImageUrl,
+                             Boolean active) {
+        this.id = id;
         this.bouquetName = bouquetName;
         this.bouquetDescription = bouquetDescription;
         this.bouquetImageUrl = bouquetImageUrl;

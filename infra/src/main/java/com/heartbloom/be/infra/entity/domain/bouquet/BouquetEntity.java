@@ -2,13 +2,11 @@ package com.heartbloom.be.infra.entity.domain.bouquet;
 
 import com.heartbloom.be.infra.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(name = "tb_bouquet")
 @Entity
 public class BouquetEntity extends BaseEntity {
@@ -29,13 +27,5 @@ public class BouquetEntity extends BaseEntity {
 
     @Column(name = "bouquet_type_id", nullable = false)
     private Long bouquetTypeId;
-
-    @Builder
-    public BouquetEntity(Long userId, String displayName, String receiverRelation, Long bouquetTypeId) {
-        this.userId = userId;
-        this.displayName = displayName;
-        this.receiverRelation = receiverRelation;
-        this.bouquetTypeId = bouquetTypeId;
-    }
 
 }

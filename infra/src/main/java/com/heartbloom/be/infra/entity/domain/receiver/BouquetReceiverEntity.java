@@ -28,7 +28,11 @@ public class BouquetReceiverEntity extends BaseEntity {
     private String receiverName;
 
     @Builder
-    public BouquetReceiverEntity(Long bouquetId, Long bouquetLinkId, String receiverName) {
+    public BouquetReceiverEntity(Long id,
+                                 Long bouquetId,
+                                 Long bouquetLinkId,
+                                 String receiverName) {
+        this.id = id;
         this.bouquetId = bouquetId;
         this.bouquetLinkId = bouquetLinkId;
         this.receiverName = receiverName;

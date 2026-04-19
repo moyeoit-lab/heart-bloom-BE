@@ -25,7 +25,10 @@ public class QuestionEntity extends BaseEntity {
     private String description;
 
     @Builder
-    public QuestionEntity(String title, String description) {
+    public QuestionEntity(Long id,
+                          String title,
+                          String description) {
+        this.id = id;
         this.title = title;
         this.description = description;
     }

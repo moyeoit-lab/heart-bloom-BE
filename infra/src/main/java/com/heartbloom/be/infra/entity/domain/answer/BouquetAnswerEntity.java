@@ -33,8 +33,8 @@ public class BouquetAnswerEntity extends BaseEntity {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "bouquet_receiver_id")
-    private Long bouquetReceiverId;
+    @Column(name = "receiver_id")
+    private Long receiverId;
 
     @Column(name = "subjective_content", columnDefinition = "TEXT")
     private String subjectiveContent;
@@ -43,14 +43,22 @@ public class BouquetAnswerEntity extends BaseEntity {
     private Long selectedOptionId;
 
     @Builder
-    public BouquetAnswerEntity(Long bouquetId, Long questionId, String answerType, String respondentType,
-                         Long userId, Long bouquetReceiverId, String subjectiveContent, Long selectedOptionId) {
+    public BouquetAnswerEntity(Long id,
+                               Long bouquetId,
+                               Long questionId,
+                               String answerType,
+                               String respondentType,
+                               Long userId,
+                               Long bouquetReceiverId,
+                               String subjectiveContent,
+                               Long selectedOptionId) {
+        this.id = id;
         this.bouquetId = bouquetId;
         this.questionId = questionId;
         this.answerType = answerType != null ? answerType : "SUBJECTIVE";
         this.respondentType = respondentType != null ? respondentType : "SENDER";
         this.userId = userId;
-        this.bouquetReceiverId = bouquetReceiverId;
+        this.receiverId = bouquetReceiverId;
         this.subjectiveContent = subjectiveContent;
         this.selectedOptionId = selectedOptionId;
     }

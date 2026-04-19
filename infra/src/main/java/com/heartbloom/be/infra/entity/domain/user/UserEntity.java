@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "tb_user")
@@ -28,7 +30,11 @@ public class UserEntity extends BaseEntity {
     private String providerType;
 
     @Builder
-    public UserEntity(String name, String email, String providerType) {
+    public UserEntity(Long id,
+                      String name,
+                      String email,
+                      String providerType) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.providerType = providerType;

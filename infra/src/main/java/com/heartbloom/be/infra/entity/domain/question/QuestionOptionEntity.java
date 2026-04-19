@@ -28,7 +28,11 @@ public class QuestionOptionEntity extends BaseEntity {
     private Integer sortOrder;
 
     @Builder
-    public QuestionOptionEntity(Long questionId, String optionText, Integer sortOrder) {
+    public QuestionOptionEntity(Long id,
+                                Long questionId,
+                                String optionText,
+                                Integer sortOrder) {
+        this.id = id;
         this.questionId = questionId;
         this.optionText = optionText;
         this.sortOrder = sortOrder != null ? sortOrder : 0;

@@ -33,7 +33,12 @@ public class BouquetLinkEntity extends BaseEntity {
     private LocalDateTime expiredAt;
 
     @Builder
-    public BouquetLinkEntity(Long bouquetId, String linkToken, String status, LocalDateTime expiredAt) {
+    public BouquetLinkEntity(Long id,
+                             Long bouquetId,
+                             String linkToken,
+                             String status,
+                             LocalDateTime expiredAt) {
+        this.id = id;
         this.bouquetId = bouquetId;
         this.linkToken = linkToken;
         this.status = status != null ? status : "ACTIVE";
