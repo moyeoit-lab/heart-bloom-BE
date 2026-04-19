@@ -1,1 +1,5 @@
 rootProject.name = 'heart-bloom-be'
+
+include 'app'
+include 'infra'
+include 'core'
