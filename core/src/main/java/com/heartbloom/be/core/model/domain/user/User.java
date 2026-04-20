@@ -16,6 +16,8 @@ public class User {
     private String name;
     private String email;
     private AuthProviderType providerType;
+    private boolean deleted;
+    private LocalDateTime deletedAt;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -28,6 +30,8 @@ public class User {
                 name,
                 email,
                 providerType,
+                false,
+                null,
                 now,
                 now
         );

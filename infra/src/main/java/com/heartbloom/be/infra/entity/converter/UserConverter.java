@@ -11,7 +11,9 @@ public class UserConverter {
                 model.getId(),
                 model.getName(),
                 model.getEmail(),
-                model.getProviderType().name()
+                model.getProviderType().name(),
+                model.isDeleted(),
+                model.getDeletedAt()
         );
     }
 
@@ -21,6 +23,8 @@ public class UserConverter {
                 entity.getName(),
                 entity.getEmail(),
                 AuthProviderType.findByCode(entity.getProviderType()),
+                entity.isDeleted(),
+                entity.getDeletedAt(),
                 entity.getCreatedAt(),
                 entity.getModifiedAt()
         );

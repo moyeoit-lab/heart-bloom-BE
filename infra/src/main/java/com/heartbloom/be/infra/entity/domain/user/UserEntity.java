@@ -29,15 +29,25 @@ public class UserEntity extends BaseEntity {
     @Column(name = "provider_type", nullable = false, length = 20)
     private String providerType;
 
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
+
+    @Column(name = "deleted_at", nullable = true)
+    private LocalDateTime deletedAt;
+
     @Builder
     public UserEntity(Long id,
                       String name,
                       String email,
-                      String providerType) {
+                      String providerType,
+                      boolean deleted,
+                      LocalDateTime deletedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.providerType = providerType;
+        this.deleted = deleted;
+        this.deletedAt = deletedAt;
     }
 
 }
