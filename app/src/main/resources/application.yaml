@@ -9,6 +9,12 @@ spring:
   config:
     import:
       - db-core.yml
+      - oauth.yml
 
 ---
 spring.config.activate.on-profile: local
+
+spring:
+  config:
+    import:
+      - optional:oauth-local.yml

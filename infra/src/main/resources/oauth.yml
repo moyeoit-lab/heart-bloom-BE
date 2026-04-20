@@ -1,0 +1,55 @@
+oauth2:
+  kakao:
+    auth:
+      client-id: 'test-client-id'
+      client-secret: 'test-client-secret'
+      client-name: 'test-client-name'
+      authorization-grant-type: 'test-authorization-grant-type'
+      redirect-uri: 'test-redirect-uri'
+      scope:
+        - 'test_scope'
+      client-authentication-method: 'test-client-authentication-method'
+    api:
+      authorization-uri: 'test-authorization-uri'
+      token-uri: 'test-token-uri'
+      user-info-uri: 'test-user-info-uri'
+      user-info-authentication-method: 'test-user-info-authentication-method'
+      user-name-attribute: 'user-name-attribute'
+
+---
+
+spring.config.activate.on-profile: dev
+
+oauth2:
+  kakao:
+    auth:
+      client-name: kakao
+      client-id: ${DEV_KAKAO_CLIENT_ID}
+      client-secret: ${DEV_KAKAO_CLIENT_SECRET}
+      redirect-uri: ${DEV_KAKAO_REDIRECT_URL}
+      scope:
+        - profile_nickname
+        - account_email
+    api:
+      authorization-uri: https://kauth.kakao.com/oauth/authorize
+      token-uri: https://kauth.kakao.com/oauth/token
+      user-info-uri: https://kapi.kakao.com/v2/user/me
+
+---
+
+spring.config.activate.on-profile: prod
+
+oauth2:
+  kakao:
+    auth:
+      client-name: kakao
+      client-id: ${KAKAO_CLIENT_ID}
+      client-secret: ${KAKAO_CLIENT_SECRET}
+      redirect-uri: ${KAKAO_REDIRECT_URL}
+      scope:
+        - profile_nickname
+        - account_email
+    api:
+      authorization-uri: https://kauth.kakao.com/oauth/authorize
+      token-uri: https://kauth.kakao.com/oauth/token
+      user-info-uri: https://kapi.kakao.com/v2/user/me
