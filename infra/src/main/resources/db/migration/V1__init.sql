@@ -35,14 +35,14 @@ CREATE TABLE tb_question_option (
 
 -- 꽃다발 테이블
 CREATE TABLE tb_bouquet (
-                            bouquet_id        BIGINT       NOT NULL AUTO_INCREMENT,
-                            user_id           BIGINT       NOT NULL COMMENT '유저 ID',
-                            display_name      VARCHAR(100) NOT NULL COMMENT '꽃다발 표시 이름',
-                            receiver_relation VARCHAR(100) NOT NULL COMMENT '수신자의 관계 (ex. 부모님, 여자친구)',
-                            bouquet_type_id   BIGINT       NOT NULL COMMENT '꽃다발 타입 ID',
-                            created_at        DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
-                            modified_at       DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
-                            PRIMARY KEY (bouquet_id)
+    bouquet_id        BIGINT       NOT NULL AUTO_INCREMENT,
+    user_id           BIGINT       NOT NULL COMMENT '유저 ID',
+    display_name      VARCHAR(100) NOT NULL COMMENT '꽃다발 표시 이름',
+    receiver_relation VARCHAR(100) NOT NULL COMMENT '수신자의 관계 (ex. 부모님, 여자친구)',
+    bouquet_type_id   BIGINT       NOT NULL COMMENT '꽃다발 타입 ID',
+    created_at        DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
+    modified_at       DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
+    PRIMARY KEY (bouquet_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 꽃다발 타입 테이블
