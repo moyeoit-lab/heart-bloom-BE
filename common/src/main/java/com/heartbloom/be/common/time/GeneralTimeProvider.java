@@ -3,6 +3,7 @@ package com.heartbloom.be.common.time;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Component
@@ -13,4 +14,10 @@ public class GeneralTimeProvider implements TimeProvider {
     public LocalDateTime now() {
         return LocalDateTime.now();
     }
+
+    @Override
+    public Instant nowInstant() {
+        return Instant.now();
+    }
+
 }
