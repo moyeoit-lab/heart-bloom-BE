@@ -11,6 +11,13 @@ spring:
       - db-core.yml
       - oauth.yml
 
+jwt:
+  secret: "test2secret"
+  access:
+    expire-time: 1000000000
+  refresh:
+    expire-time: 1000000000
+
 ---
 spring.config.activate.on-profile: local
 
@@ -18,3 +25,26 @@ spring:
   config:
     import:
       - optional:oauth-local.yml
+
+
+
+---
+spring.config.activate.on-profile: dev
+
+jwt:
+  secret: ${DEV_JWT_SECRET}
+  access:
+    expire-time: ${DEV_ACCESS_EXPIRE_TIME}
+  refresh:
+    expire-time: ${DEV_REFRESH_EXPIRE_TIME}
+
+
+---
+spring.config.activate.on-profile: prod
+
+jwt:
+  secret: ${JWT_SECRET}
+  access:
+    expire-time: ${ACCESS_EXPIRE_TIME}
+  refresh:
+    expire-time: ${REFRESH_EXPIRE_TIME}
