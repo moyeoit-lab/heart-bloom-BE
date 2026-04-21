@@ -1,5 +1,11 @@
 package com.heartbloom.be.app.service.auth;
 
+import com.heartbloom.be.app.application.auth.dto.TokenResult;
+import com.heartbloom.be.app.application.auth.generator.JwtGenerator;
+import com.heartbloom.be.app.application.user.UserManager;
+import com.heartbloom.be.core.model.domain.user.User;
+import com.heartbloom.be.core.model.domain.user.enumerate.AuthProviderType;
+import com.heartbloom.be.core.repository.domain.user.UserRepository;
 import com.heartbloom.be.infra.client.auth.OAuth2Client;
 import com.heartbloom.be.infra.client.auth.response.OAuth2TokenResponse;
 import com.heartbloom.be.infra.client.auth.response.OAuth2UserResponse;
@@ -16,22 +22,29 @@ import java.util.Objects;
 public class AuthService {
 
     private final List<OAuth2Client> oAuth2Clients;
+    private final UserRepository userRepository;
+    private final JwtGenerator jwtGenerator;
+    private final UserManager userManager;
 
     public String getLoginUrl(String redirectUri, String state, String provider) {
-        // TODO : common 모듈 추가 후 예외 처리
         OAuth2Client oAuth2Client = getAvailableOAuth2Client(provider);
-
         return oAuth2Client.getLoginUrl(redirectUri, state);
     }
 
-    public void login(String code, String redirectUri, String provider) {
+    public TokenResult login(String code, String redirectUri, String provider) {
         OAuth2Client oAuth2Client = getAvailableOAuth2Client(provider);
         OAuth2TokenResponse token = oAuth2Client.getToken(code, redirectUri);
         OAuth2UserResponse userResponse = oAuth2Client.getUserInfo(token.getAccessToken());
-        // TODO : JWT 생성
+
+        AuthProviderType providerType = AuthProviderType.findByCode(provider);
+        User user = userRepository.findByEmail(userResponse.email())
+                .orElseGet(() -> userManager.createUser(userResponse.name(), userResponse.email(), providerType));
+
+        return jwtGenerator.generateAccess(user.getId(), user.getEmail(), user.isDeleted());
     }
 
     private OAuth2Client getAvailableOAuth2Client(String provider) {
+        // TODO : common 모듈 추가 후 예외 처리
         return oAuth2Clients.stream()
                 .filter(client -> Objects.equals(provider, client.getProviderType().getSerializedValue()))
                 .findFirst()
