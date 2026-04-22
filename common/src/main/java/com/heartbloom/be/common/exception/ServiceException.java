@@ -1,5 +1,7 @@
 package com.heartbloom.be.common.exception;
 
+import com.heartbloom.be.common.exception.code.ErrorCode;
+
 public class ServiceException extends RuntimeException {
 
     private final ErrorCode errorCode;
