@@ -1,6 +1,7 @@
-package com.heartbloom.be.app.security;
+package com.heartbloom.be.app.security.jwt;
 
 import com.heartbloom.be.app.application.user.implementation.UserReader;
+import com.heartbloom.be.app.security.CustomUserPrincipal;
 import com.heartbloom.be.core.model.domain.user.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

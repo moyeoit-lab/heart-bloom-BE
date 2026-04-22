@@ -1,4 +1,4 @@
-package com.heartbloom.be.app.security;
+package com.heartbloom.be.app.security.jwt;
 
 import com.heartbloom.be.app.service.auth.dto.TokenResult;
 import com.heartbloom.be.common.time.TimeProvider;

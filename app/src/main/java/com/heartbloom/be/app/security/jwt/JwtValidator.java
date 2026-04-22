@@ -1,4 +1,4 @@
-package com.heartbloom.be.app.security;
+package com.heartbloom.be.app.security.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

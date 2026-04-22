@@ -1,8 +1,8 @@
 package com.heartbloom.be.app.config;
 
 import com.heartbloom.be.app.application.user.implementation.UserReader;
-import com.heartbloom.be.app.security.JwtFilter;
-import com.heartbloom.be.app.security.JwtValidator;
+import com.heartbloom.be.app.security.jwt.JwtFilter;
+import com.heartbloom.be.app.security.jwt.JwtValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,8 +45,6 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 // HTTP Basic 비활성화
                 .httpBasic(AbstractHttpConfigurer::disable)
-                // OAuth2 로그인 비활성화
-                .oauth2Login(AbstractHttpConfigurer::disable)
                 // 인가 규칙
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").permitAll()

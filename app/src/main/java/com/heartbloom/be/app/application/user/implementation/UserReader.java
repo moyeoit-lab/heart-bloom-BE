@@ -1,7 +1,7 @@
 package com.heartbloom.be.app.application.user.implementation;
 
 import com.heartbloom.be.common.exception.ServiceException;
-import com.heartbloom.be.common.exception.UserErrorCode;
+import com.heartbloom.be.common.exception.code.UserErrorCode;
 import com.heartbloom.be.core.model.domain.user.User;
 import com.heartbloom.be.core.repository.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,16 +1,18 @@
 package com.heartbloom.be.common.exception.code;
 
+
 import com.heartbloom.be.common.enumerate.ApiHttpStatus;
 
-public enum AuthErrorCode implements ErrorCode {
+public enum UserErrorCode implements ErrorCode {
 
-    NOT_SUPPORT_PROVIDER("NOT_SUPPORT_PROVIDER", "지원하지 않는 인증 제공자입니다.", ApiHttpStatus.BAD_REQUEST);
+    NOT_FOUND("NOT_FOUND", "회원 정보를 찾을 수 없습니다.", ApiHttpStatus.BAD_REQUEST)
+    ;
 
     private final String code;
     private final String message;
     private final ApiHttpStatus apiHttpStatus;
 
-    AuthErrorCode(String code, String message, ApiHttpStatus apiHttpStatus) {
+    UserErrorCode(String code, String message, ApiHttpStatus apiHttpStatus) {
         this.code = code;
         this.message = message;
         this.apiHttpStatus = apiHttpStatus;
