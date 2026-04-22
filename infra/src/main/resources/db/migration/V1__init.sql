@@ -40,6 +40,8 @@ CREATE TABLE tb_bouquet (
     display_name      VARCHAR(100) NOT NULL COMMENT '꽃다발 표시 이름',
     receiver_relation VARCHAR(100) NOT NULL COMMENT '수신자의 관계 (ex. 부모님, 여자친구)',
     bouquet_type_id   BIGINT       NOT NULL COMMENT '꽃다발 타입 ID',
+    deleted           BOOLEAN     NOT NULL DEFAULT false COMMENT '삭제 여부',
+    deleted_at        DATETIME    NULL                   COMMENT '삭제일시',
     created_at        DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     modified_at       DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
     PRIMARY KEY (bouquet_id)
@@ -92,6 +94,7 @@ CREATE TABLE tb_bouquet_answer (
     receiver_id         BIGINT      NULL     COMMENT '수신자 ID',
     subjective_content  TEXT        NULL     COMMENT '주관식 답변 내용',
     selected_option_id  BIGINT      NULL     COMMENT '객관식 옵션 ID',
+    sort_order          INTEGER    NOT NULL DEFAULT 1 COMMENT '정렬 순서',
     created_at          DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     modified_at         DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
     PRIMARY KEY (bouquet_answer_id)
