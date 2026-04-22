@@ -22,9 +22,34 @@ public class BouquetAnswer {
     private Long receiverId;
     private String subjectiveContent;
     private Long selectedOptionId;
+    private Integer sortOrder;
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+
+    public static BouquetAnswer createOfSender(Long bouquetId,
+                                               Long questionId,
+                                               BouquetAnswerType answerType,
+                                               Long userId,
+                                               String subjectiveContent,
+                                               Long selectedOptionId,
+                                               Integer sortOrder,
+                                               LocalDateTime now) {
+        return new BouquetAnswer(
+                null,
+                bouquetId,
+                questionId,
+                answerType,
+                BouquetAnswerRespondentType.SENDER,
+                userId,
+                null,
+                subjectiveContent,
+                selectedOptionId,
+                sortOrder,
+                now,
+                now
+        );
+    }
 
     public static BouquetAnswer create(Long bouquetId,
                                 Long questionId,
@@ -34,6 +59,7 @@ public class BouquetAnswer {
                                 Long receiverId,
                                 String subjectiveContent,
                                 Long selectedOptionId,
+                                Integer sortOrder,
                                 LocalDateTime now) {
         return new BouquetAnswer(
                 null,
@@ -45,6 +71,7 @@ public class BouquetAnswer {
                 receiverId,
                 subjectiveContent,
                 selectedOptionId,
+                sortOrder,
                 now,
                 now
         );

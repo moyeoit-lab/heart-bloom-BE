@@ -17,7 +17,8 @@ public class BouquetAnswerConverter {
                 model.getUserId(),
                 model.getReceiverId(),
                 model.getSubjectiveContent(),
-                model.getSelectedOptionId()
+                model.getSelectedOptionId(),
+                model.getSortOrder()
         );
     }
 
@@ -32,6 +33,7 @@ public class BouquetAnswerConverter {
                 entity.getReceiverId(),
                 entity.getSubjectiveContent(),
                 entity.getSelectedOptionId(),
+                entity.getSortOrder(),
                 entity.getCreatedAt(),
                 entity.getModifiedAt()
         );

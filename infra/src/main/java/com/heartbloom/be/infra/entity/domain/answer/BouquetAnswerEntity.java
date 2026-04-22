@@ -42,6 +42,9 @@ public class BouquetAnswerEntity extends BaseEntity {
     @Column(name = "selected_option_id")
     private Long selectedOptionId;
 
+    @Column(name = "sort_order")
+    private Integer sortOrder;
+
     @Builder
     public BouquetAnswerEntity(Long id,
                                Long bouquetId,
@@ -51,7 +54,8 @@ public class BouquetAnswerEntity extends BaseEntity {
                                Long userId,
                                Long bouquetReceiverId,
                                String subjectiveContent,
-                               Long selectedOptionId) {
+                               Long selectedOptionId,
+                               Integer sortOrder) {
         this.id = id;
         this.bouquetId = bouquetId;
         this.questionId = questionId;
@@ -61,6 +65,7 @@ public class BouquetAnswerEntity extends BaseEntity {
         this.receiverId = bouquetReceiverId;
         this.subjectiveContent = subjectiveContent;
         this.selectedOptionId = selectedOptionId;
+        this.sortOrder = sortOrder;
     }
 
 }
