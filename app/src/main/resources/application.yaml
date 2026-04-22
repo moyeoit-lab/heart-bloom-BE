@@ -12,7 +12,7 @@ spring:
       - oauth.yml
 
 jwt:
-  secret: "test2secret"
+  secret: dGhpc2lzdGVzdHNlY3JldGtleWRvbnR1c2V0aGlzc2VjcmV0a2V5
   access:
     expire-time: 1000000000
   refresh:
