@@ -1,6 +1,6 @@
 package com.heartbloom.be.app.api.auth.response;
 
-import com.heartbloom.be.app.application.auth.dto.TokenResult;
+import com.heartbloom.be.app.service.auth.dto.TokenResult;
 
 public record LoginResponse (
         String accessToken

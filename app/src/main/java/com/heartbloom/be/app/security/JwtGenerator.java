@@ -1,6 +1,6 @@
-package com.heartbloom.be.app.application.auth.generator;
+package com.heartbloom.be.app.security;
 
-import com.heartbloom.be.app.application.auth.dto.TokenResult;
+import com.heartbloom.be.app.service.auth.dto.TokenResult;
 import com.heartbloom.be.common.time.TimeProvider;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

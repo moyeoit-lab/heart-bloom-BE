@@ -1,8 +1,8 @@
 package com.heartbloom.be.app.service.auth;
 
-import com.heartbloom.be.app.application.auth.dto.TokenResult;
-import com.heartbloom.be.app.application.auth.generator.JwtGenerator;
-import com.heartbloom.be.app.application.user.UserManager;
+import com.heartbloom.be.app.service.auth.dto.TokenResult;
+import com.heartbloom.be.app.security.JwtGenerator;
+import com.heartbloom.be.app.application.user.implementation.UserManager;
 import com.heartbloom.be.core.model.domain.user.User;
 import com.heartbloom.be.core.model.domain.user.enumerate.AuthProviderType;
 import com.heartbloom.be.core.repository.domain.user.UserRepository;

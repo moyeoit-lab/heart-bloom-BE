@@ -2,7 +2,7 @@ package com.heartbloom.be.app.api.auth;
 
 import com.heartbloom.be.app.api.auth.response.GetLoginUrlResponse;
 import com.heartbloom.be.app.api.auth.response.LoginResponse;
-import com.heartbloom.be.app.application.auth.dto.TokenResult;
+import com.heartbloom.be.app.service.auth.dto.TokenResult;
 import com.heartbloom.be.app.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
