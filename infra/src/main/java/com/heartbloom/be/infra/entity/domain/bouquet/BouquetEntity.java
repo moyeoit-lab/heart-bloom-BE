@@ -4,6 +4,8 @@ import com.heartbloom.be.infra.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -27,5 +29,11 @@ public class BouquetEntity extends BaseEntity {
 
     @Column(name = "bouquet_type_id", nullable = false)
     private Long bouquetTypeId;
+
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
+
+    @Column(name = "deleted_at", nullable = true)
+    private LocalDateTime deletedAt;
 
 }

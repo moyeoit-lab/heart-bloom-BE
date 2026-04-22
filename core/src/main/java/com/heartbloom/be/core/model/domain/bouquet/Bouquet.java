@@ -17,6 +17,9 @@ public class Bouquet {
     private String displayName;
     private RelationType relationType;
     private Long bouquetTypeId;
+
+    private boolean deleted;
+    private LocalDateTime deletedAt;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -31,6 +34,8 @@ public class Bouquet {
                 displayName,
                 relationType,
                 bouquetTypeId,
+                false,
+                null,
                 now,
                 now
         );

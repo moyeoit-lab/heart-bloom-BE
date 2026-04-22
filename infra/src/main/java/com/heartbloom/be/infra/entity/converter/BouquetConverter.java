@@ -12,7 +12,9 @@ public class BouquetConverter {
             model.getUserId(),
             model.getDisplayName(),
             model.getRelationType().name(),
-            model.getBouquetTypeId()
+            model.getBouquetTypeId(),
+            model.isDeleted(),
+            model.getDeletedAt()
         );
     }
 
@@ -23,6 +25,8 @@ public class BouquetConverter {
                 entity.getDisplayName(),
                 RelationType.findByCode(entity.getReceiverRelation()),
                 entity.getBouquetTypeId(),
+                entity.isDeleted(),
+                entity.getDeletedAt(),
                 entity.getCreatedAt(),
                 entity.getModifiedAt()
         );
