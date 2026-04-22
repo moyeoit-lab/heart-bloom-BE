@@ -2,6 +2,7 @@ package com.heartbloom.be.app.api.auth;
 
 import com.heartbloom.be.app.api.auth.response.GetLoginUrlResponse;
 import com.heartbloom.be.app.api.auth.response.LoginResponse;
+import com.heartbloom.be.app.api.exception.response.ApiResponse;
 import com.heartbloom.be.app.service.auth.dto.TokenResult;
 import com.heartbloom.be.app.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -16,19 +17,19 @@ public class AuthController {
     private final AuthService authService;
 
     @GetMapping("/oauth2/{provider}/login-url")
-    public ResponseEntity<GetLoginUrlResponse> getLoginUrl(@PathVariable String provider,
-                                                           @RequestParam String redirectUri,
-                                                           @RequestParam String state) {
+    public ResponseEntity<ApiResponse<GetLoginUrlResponse>> getLoginUrl(@PathVariable String provider,
+                                                   @RequestParam String redirectUri,
+                                                   @RequestParam String state) {
         String loginUrl = authService.getLoginUrl(redirectUri, state, provider);
-        return ResponseEntity.ok(GetLoginUrlResponse.of(loginUrl, provider));
+        return ResponseEntity.ok(ApiResponse.success(GetLoginUrlResponse.of(loginUrl, provider)));
     }
 
     @PostMapping("/oauth2/{provider}/login")
-    public ResponseEntity<LoginResponse> login(@PathVariable String provider,
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@PathVariable String provider,
                                                @RequestParam String code,
                                                @RequestParam String redirectUri) {
         TokenResult result = authService.login(code, redirectUri, provider);
-        return ResponseEntity.ok(LoginResponse.of(result));
+        return ResponseEntity.ok(ApiResponse.success(LoginResponse.of(result)));
     }
 
 }
