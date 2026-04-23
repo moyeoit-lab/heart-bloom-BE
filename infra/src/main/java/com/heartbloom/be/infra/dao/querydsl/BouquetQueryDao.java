@@ -1,5 +1,7 @@
 package com.heartbloom.be.infra.dao.querydsl;
 
+import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetReceiverType;
+import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetSenderType;
 import com.heartbloom.be.core.repository.domain.bouquet.dto.GetBouquetQueryDto;
 import com.heartbloom.be.infra.entity.domain.bouquet.QBouquetEntity;
 import com.heartbloom.be.infra.entity.domain.bouquet.QBouquetTypeEntity;
@@ -19,11 +21,14 @@ public class BouquetQueryDao {
     private final QBouquetEntity bouquet = QBouquetEntity.bouquetEntity;
     private final QBouquetTypeEntity bouquetType = QBouquetTypeEntity.bouquetTypeEntity;
 
-    public List<GetBouquetQueryDto> queryBouquets(Long userId) {
+    public List<GetBouquetQueryDto> querySentBouquets(Long senderId, BouquetSenderType senderType) {
         return queryFactory
                 .select(Projections.constructor(GetBouquetQueryDto.class,
                         bouquet.id,
-                        bouquet.userId,
+                        bouquet.senderId,
+                        bouquet.senderType,
+                        bouquet.receiverId,
+                        bouquet.receiverType,
                         bouquet.bouquetTypeId,
                         bouquetType.bouquetName,
                         bouquetType.bouquetDescription,
@@ -32,14 +37,34 @@ public class BouquetQueryDao {
                 .from(bouquet)
                 .leftJoin(bouquetType).on(bouquet.bouquetTypeId.eq(bouquetType.id))
                 .where(
-                        bouquet.userId.eq(userId),
+                        bouquet.senderId.eq(senderId),
+                        bouquet.senderType.eq(senderType),
                         bouquet.deleted.isFalse()
                 )
                 .fetch();
     }
 
-
-
-
+    public List<GetBouquetQueryDto> queryReceivedBouquets(Long receiverId, BouquetReceiverType receiverType) {
+        return queryFactory
+                .select(Projections.constructor(GetBouquetQueryDto.class,
+                        bouquet.id,
+                        bouquet.senderId,
+                        bouquet.senderType,
+                        bouquet.receiverId,
+                        bouquet.receiverType,
+                        bouquet.bouquetTypeId,
+                        bouquetType.bouquetName,
+                        bouquetType.bouquetDescription,
+                        bouquetType.bouquetImageUrl
+                ))
+                .from(bouquet)
+                .leftJoin(bouquetType).on(bouquet.bouquetTypeId.eq(bouquetType.id))
+                .where(
+                        bouquet.receiverId.eq(receiverId),
+                        bouquet.receiverType.eq(receiverType),
+                        bouquet.deleted.isFalse()
+                )
+                .fetch();
+    }
 
 }

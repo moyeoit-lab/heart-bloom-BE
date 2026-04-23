@@ -1,6 +1,8 @@
 package com.heartbloom.be.infra.repository.bouquet;
 
 import com.heartbloom.be.core.model.domain.bouquet.Bouquet;
+import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetReceiverType;
+import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetSenderType;
 import com.heartbloom.be.core.repository.domain.bouquet.BouquetRepository;
 import com.heartbloom.be.core.repository.domain.bouquet.dto.GetBouquetQueryDto;
 import com.heartbloom.be.infra.dao.jpa.bouquet.BouquetJpaDao;
@@ -34,16 +36,27 @@ public class BouquetRepositoryImpl implements BouquetRepository {
     }
 
     @Override
-    public List<Bouquet> findByUserId(Long userId) {
-        return bouquetJpaDao.findByUserId(userId)
-                .stream()
+    public List<Bouquet> findBySender(Long senderId, BouquetSenderType senderType) {
+        return bouquetJpaDao.findBySender(senderId, senderType).stream()
                 .map(BouquetConverter::toModel)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<GetBouquetQueryDto> queryBouquets(Long userId) {
-        return bouquetQueryDao.queryBouquets(userId);
+    public List<Bouquet> findByReceiver(Long receiverId, BouquetReceiverType receiverType) {
+        return bouquetJpaDao.findByReceiver(receiverId, receiverType).stream()
+                .map(BouquetConverter::toModel)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GetBouquetQueryDto> querySentBouquets(Long senderId, BouquetSenderType senderType) {
+        return bouquetQueryDao.querySentBouquets(senderId, senderType);
+    }
+
+    @Override
+    public List<GetBouquetQueryDto> queryReceivedBouquets(Long receiverId, BouquetReceiverType receiverType) {
+        return bouquetQueryDao.queryReceivedBouquets(receiverId, receiverType);
     }
 
 }
