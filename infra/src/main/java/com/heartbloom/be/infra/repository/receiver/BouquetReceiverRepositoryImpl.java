@@ -1,4 +1,4 @@
-package com.heartbloom.be.infra.repository.domain.receiver;
+package com.heartbloom.be.infra.repository.receiver;
 
 import com.heartbloom.be.core.model.domain.receiver.BouquetReceiver;
 import com.heartbloom.be.core.repository.domain.receiver.BouquetReceiverRepository;

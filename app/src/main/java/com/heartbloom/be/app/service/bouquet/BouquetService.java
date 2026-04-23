@@ -46,8 +46,9 @@ public class BouquetService {
     public CreateBouquetResponse create(CreateBouquetRequest request, AccessUser user) {
         LocalDateTime now = timeProvider.now();
 
-        Bouquet bouquet = bouquetManager.create(request, user.getId());
-        List<BouquetAnswer> answers = bouquetAnswerManager.create(bouquet.getId(), user.getId(), request.answers());
+        Long userId = user instanceof AuthenticateUser ? user.getId() : null;
+        Bouquet bouquet = bouquetManager.create(request, userId);
+        List<BouquetAnswer> answers = bouquetAnswerManager.create(bouquet.getId(), userId, request.answers());
 
         String linkToken = linkTokenGenerator.generate();
         BouquetLink bouquetLink = bouquetLinkManager.create(bouquet.getId(), linkToken, now);
