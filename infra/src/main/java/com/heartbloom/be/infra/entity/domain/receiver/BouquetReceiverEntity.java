@@ -24,6 +24,9 @@ public class BouquetReceiverEntity extends BaseEntity {
     @Column(name = "bouquet_link_id", nullable = false)
     private Long bouquetLinkId;
 
+    @Column(name = "user_id")
+    private Long userId;
+
     @Column(name = "receiver_name", nullable = false, length = 100)
     private String receiverName;
 
@@ -31,10 +34,12 @@ public class BouquetReceiverEntity extends BaseEntity {
     public BouquetReceiverEntity(Long id,
                                  Long bouquetId,
                                  Long bouquetLinkId,
+                                 Long userId,
                                  String receiverName) {
         this.id = id;
         this.bouquetId = bouquetId;
         this.bouquetLinkId = bouquetLinkId;
+        this.userId = userId;
         this.receiverName = receiverName;
     }
 
