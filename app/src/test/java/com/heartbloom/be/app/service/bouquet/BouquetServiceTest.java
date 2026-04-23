@@ -8,15 +8,19 @@ import com.heartbloom.be.app.security.access.AuthenticateUser;
 import com.heartbloom.be.app.security.access.AnonymousUser;
 import com.heartbloom.be.common.exception.ServiceException;
 import com.heartbloom.be.common.exception.code.BouquetErrorCode;
+import com.heartbloom.be.common.time.TimeProvider;
 import com.heartbloom.be.core.model.domain.answer.BouquetAnswer;
 import com.heartbloom.be.core.model.domain.answer.enumerate.BouquetAnswerType;
 import com.heartbloom.be.core.model.domain.bouquet.Bouquet;
 import com.heartbloom.be.core.model.domain.bouquet.BouquetLink;
 import com.heartbloom.be.core.model.domain.bouquet.BouquetType;
 import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetLinkStatus;
+import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetReceiverType;
+import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetSenderType;
 import com.heartbloom.be.core.model.domain.receiver.BouquetReceiver;
 import com.heartbloom.be.core.model.domain.user.User;
 import com.heartbloom.be.core.model.domain.user.enumerate.AuthProviderType;
+import com.heartbloom.be.core.repository.domain.bouquet.BouquetRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -42,6 +46,8 @@ class BouquetServiceTest {
     private BouquetService bouquetService;
 
     @Mock
+    private TimeProvider timeProvider;
+    @Mock
     private BouquetManager bouquetManager;
     @Mock
     private BouquetAnswerManager bouquetAnswerManager;
@@ -53,6 +59,8 @@ class BouquetServiceTest {
     private BouquetTypeManager bouquetTypeManager;
     @Mock
     private UserManager userManager;
+    @Mock
+    private BouquetRepository bouquetRepository;
 
     @Nested
     @DisplayName("getBouquetForReceiver 테스트")
@@ -122,7 +130,7 @@ class BouquetServiceTest {
             // when & then
             assertThatThrownBy(() -> bouquetService.getBouquetForReceiver(token))
                     .isInstanceOf(ServiceException.class)
-                    .hasFieldOrPropertyWithValue("errorCode", BouquetErrorCode.BOUQUET_LINK_EXPIRED);
+                    .hasFieldOrPropertyWithValue("errorCode", BouquetErrorCode.LINK_EXPIRED);
         }
     }
 
@@ -141,10 +149,12 @@ class BouquetServiceTest {
             AuthenticateUser user = new AuthenticateUser(userId, "Name", "email", true);
             
             BouquetLink link = BouquetLink.builder().id(1L).bouquetId(bouquetId).status(BouquetLinkStatus.ACTIVE).build();
+            Bouquet bouquet = Bouquet.builder().id(bouquetId).receiverType(BouquetReceiverType.GUEST).build();
             BouquetReceiver receiver = BouquetReceiver.builder().id(receiverId).build();
             List<CreateBouquetAnswerRequest> answers = List.of(new CreateBouquetAnswerRequest(1L, BouquetAnswerType.SUBJECTIVE, "Answer", 1));
 
             given(bouquetLinkManager.findByToken(token)).willReturn(Optional.of(link));
+            given(bouquetManager.findById(bouquetId)).willReturn(Optional.of(bouquet));
             given(bouquetReceiverManager.findByBouquetLinkId(1L)).willReturn(Optional.of(receiver));
 
             // when
@@ -164,9 +174,11 @@ class BouquetServiceTest {
             AnonymousUser anonymousUser = new AnonymousUser();
             
             BouquetLink link = BouquetLink.builder().id(1L).bouquetId(1L).status(BouquetLinkStatus.ACTIVE).build();
+            Bouquet bouquet = Bouquet.builder().id(1L).receiverType(BouquetReceiverType.GUEST).build();
             BouquetReceiver receiver = BouquetReceiver.builder().id(10L).build();
             
             given(bouquetLinkManager.findByToken(token)).willReturn(Optional.of(link));
+            given(bouquetManager.findById(1L)).willReturn(Optional.of(bouquet));
             given(bouquetReceiverManager.findByBouquetLinkId(1L)).willReturn(Optional.of(receiver));
 
             // when
@@ -191,11 +203,14 @@ class BouquetServiceTest {
             Long userId = 100L;
             AuthenticateUser user = new AuthenticateUser(userId, "Name", "email", true);
             
-            BouquetLink link = BouquetLink.builder().id(1L).build();
+            BouquetLink link = BouquetLink.builder().id(1L).bouquetId(1L).build();
+            Bouquet bouquet = Bouquet.builder().id(1L).receiverType(BouquetReceiverType.GUEST).build();
             BouquetReceiver receiver = BouquetReceiver.builder().id(10L).userId(null).build();
             
             given(bouquetLinkManager.findByToken(token)).willReturn(Optional.of(link));
+            given(bouquetManager.findById(1L)).willReturn(Optional.of(bouquet));
             given(bouquetReceiverManager.findByBouquetLinkId(1L)).willReturn(Optional.of(receiver));
+            given(timeProvider.now()).willReturn(LocalDateTime.now());
 
             // when
             bouquetService.claimBouquet(token, user);
