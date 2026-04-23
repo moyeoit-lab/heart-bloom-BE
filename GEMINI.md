@@ -13,10 +13,10 @@
     - `V2__add_user_id_to_bouquet_receiver.sql` 파일을 생성하여 DB 스키마를 업데이트합니다. (상태값 주석 업데이트 포함)
 
 ### [2단계] Infrastructure 저장소 구현 (Infra)
-- [ ] **1. BouquetReceiverRepository 구현**
+- [x] **1. BouquetReceiverRepository 구현**
     - core에 인터페이스를 정의하고, infra에서 JPA를 이용해 구현합니다.
-- [ ] **2. BouquetLink 조회 쿼리**
-    - linkToken을 통해 Bouquet과 BouquetType 정보를 한 번에 가져오는 효율적인 쿼리를 작성합니다.
+- [x] **2. BouquetLink 조회 쿼리**
+    - linkToken을 통해 Bouquet 정보를 가져오는 쿼리를 작성합니다. (RepositoryImpl 구현 완료)
 
 ### [3단계] 핵심 비즈니스 로직 구현 (App - Manager/Service)
 - [ ] **1. BouquetReceiverManager 신설**
