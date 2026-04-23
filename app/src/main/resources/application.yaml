@@ -5,6 +5,16 @@ logging:
   level:
     org.flywaydb: DEBUG
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
 spring:
   config:
     import:
@@ -41,6 +51,10 @@ jwt:
 
 ---
 spring.config.activate.on-profile: prod
+
+server:
+  servlet:
+    context-path: /heart-bloom
 
 jwt:
   secret: ${JWT_SECRET}
