@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -22,6 +23,10 @@ public class UserManager {
         LocalDateTime now = timeProvider.now();
         User newUser = User.create(name, email, providerType, now);
         return userRepository.save(newUser);
+    }
+
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
     }
 
 }

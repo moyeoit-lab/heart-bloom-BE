@@ -14,18 +14,21 @@ public class BouquetReceiver {
     private Long id;
     private Long bouquetId;
     private Long bouquetLinkId;
+    private Long userId;
     private String receiverName;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
     public static BouquetReceiver create(Long bouquetId,
                                   Long bouquetLinkId,
+                                  Long userId,
                                   String receiverName,
                                   LocalDateTime now) {
         return new BouquetReceiver(
                 null,
                 bouquetId,
                 bouquetLinkId,
+                userId,
                 receiverName,
                 now,
                 now

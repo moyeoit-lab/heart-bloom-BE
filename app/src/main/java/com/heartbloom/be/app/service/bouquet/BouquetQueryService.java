@@ -2,11 +2,15 @@ package com.heartbloom.be.app.service.bouquet;
 
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetResponse;
 import com.heartbloom.be.app.security.access.AccessUser;
+import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetReceiverType;
+import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetSenderType;
 import com.heartbloom.be.core.repository.domain.bouquet.BouquetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -14,11 +18,21 @@ public class BouquetQueryService {
 
     private final BouquetRepository bouquetRepository;
 
+    @Transactional(readOnly = true)
     public List<GetBouquetResponse> getBouquets(AccessUser user) {
-        return bouquetRepository.queryBouquets(user.getId())
+        // 내가 보낸 부케 목록 조회
+        List<GetBouquetResponse> sent = bouquetRepository.querySentBouquets(user.getId(), BouquetSenderType.USER)
                 .stream()
                 .map(GetBouquetResponse::of)
                 .toList();
+
+        // 내가 받은 부케 목록 조회
+        List<GetBouquetResponse> received = bouquetRepository.queryReceivedBouquets(user.getId(), BouquetReceiverType.USER)
+                .stream()
+                .map(GetBouquetResponse::of)
+                .toList();
+
+        return Stream.concat(sent.stream(), received.stream()).toList();
     }
 
 }

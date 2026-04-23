@@ -1,5 +1,7 @@
 package com.heartbloom.be.infra.entity.domain.bouquet;
 
+import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetReceiverType;
+import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetSenderType;
 import com.heartbloom.be.infra.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,8 +20,19 @@ public class BouquetEntity extends BaseEntity {
     @Column(name = "bouquet_id")
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Column(name = "sender_id", nullable = false)
+    private Long senderId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "sender_type", nullable = false, length = 20)
+    private BouquetSenderType senderType;
+
+    @Column(name = "receiver_id")
+    private Long receiverId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "receiver_type", nullable = false, length = 20)
+    private BouquetReceiverType receiverType;
 
     @Column(name = "display_name", nullable = false, length = 100)
     private String displayName;

@@ -3,6 +3,7 @@ package com.heartbloom.be.app.application.bouquet.implementation.reader;
 import com.heartbloom.be.common.exception.ServiceException;
 import com.heartbloom.be.common.exception.code.BouquetErrorCode;
 import com.heartbloom.be.core.model.domain.bouquet.Bouquet;
+import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetSenderType;
 import com.heartbloom.be.core.repository.domain.bouquet.BouquetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,8 +21,8 @@ public class BouquetReader {
                 .orElseThrow((() -> new ServiceException(BouquetErrorCode.NOT_FOUND)));
     }
 
-    public List<Bouquet> readBouquets(Long bouquetId, Long userId) {
-        return bouquetRepository.findByUserId(userId);
+    public List<Bouquet> readBouquets(Long userId) {
+        return bouquetRepository.findBySender(userId, BouquetSenderType.USER);
     }
 
 }

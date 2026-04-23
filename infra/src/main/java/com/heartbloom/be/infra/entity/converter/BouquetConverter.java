@@ -9,7 +9,10 @@ public class BouquetConverter {
     public static BouquetEntity toEntity(Bouquet model) {
         return new BouquetEntity(
             model.getId(),
-            model.getUserId(),
+            model.getSenderId(),
+            model.getSenderType(),
+            model.getReceiverId(),
+            model.getReceiverType(),
             model.getDisplayName(),
             model.getRelationType().name(),
             model.getBouquetTypeId(),
@@ -21,7 +24,10 @@ public class BouquetConverter {
     public static Bouquet toModel(BouquetEntity entity) {
         return new Bouquet(
                 entity.getId(),
-                entity.getUserId(),
+                entity.getSenderId(),
+                entity.getSenderType(),
+                entity.getReceiverId(),
+                entity.getReceiverType(),
                 entity.getDisplayName(),
                 RelationType.findByCode(entity.getReceiverRelation()),
                 entity.getBouquetTypeId(),

@@ -37,4 +37,4 @@ out/
 .vscode/
 
 ### Security
-oauth-local.yml
+oauth-local.yml\n# Gemini Guide\nGEMINI.md

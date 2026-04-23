@@ -10,6 +10,7 @@ public class BouquetReceiverConverter {
                 model.getId(),
                 model.getBouquetId(),
                 model.getBouquetLinkId(),
+                model.getUserId(),
                 model.getReceiverName()
         );
     }
@@ -19,6 +20,7 @@ public class BouquetReceiverConverter {
                 entity.getId(),
                 entity.getBouquetId(),
                 entity.getBouquetLinkId(),
+                entity.getUserId(),
                 entity.getReceiverName(),
                 entity.getCreatedAt(),
                 entity.getModifiedAt()

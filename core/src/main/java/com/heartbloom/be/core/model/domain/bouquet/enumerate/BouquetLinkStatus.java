@@ -8,7 +8,8 @@ import java.util.Arrays;
 public enum BouquetLinkStatus {
 
     ACTIVE("active", "활성화"),
-    EXPIRED("expired", "만료")
+    EXPIRED("expired", "만료"),
+    COMPLETED("completed", "완료")
     ;
 
     private final String serializedValue;
