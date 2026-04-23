@@ -19,5 +19,8 @@ public interface BouquetLinkJpaDao extends JpaRepository<BouquetLinkEntity, Long
     Optional<BouquetLinkEntity> findByBouquetIdAndStatus(@Param("bouquetId") Long bouquetId,
                                                    @Param("bouquetLinkStatus") BouquetLinkStatus bouquetLinkStatus);
 
+    Optional<BouquetLinkEntity> findByLinkToken(String linkToken);
+
+    Optional<BouquetLinkEntity> findByBouquetId(Long bouquetId);
 
 }
