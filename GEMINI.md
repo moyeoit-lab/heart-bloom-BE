@@ -34,3 +34,13 @@
 - [x] **2. Security Config 수정**
     - 모든 요청이 `permitAll()`로 설정되어 있어 비로그인 접근이 가능함을 확인했습니다.
     - `BouquetService`에서 `AnonymousUser`를 체크하여 예외 없이 안전하게 처리되도록 보완했습니다.
+
+### [5단계] 테스트 및 검증 (Test)
+- [ ] **1. BouquetService 단위 테스트**
+    - `getBouquetForReceiver`: 링크 토큰으로 부케 정보 조회 검증.
+    - `completeBouquet`: 비로그인/로그인 상황별 답변 저장 및 상태 변경 검증.
+    - `claimBouquet`: 비로그인 답변의 소유권 이전(연결) 로직 검증.
+- [ ] **2. BouquetReceiverController 통합 테스트**
+    - API 엔드포인트 호출 및 응답 규격 검증.
+- [ ] **3. 시나리오 테스트**
+    - 부케 생성 -> 링크 공유 -> 수신자 답변(비로그인) -> 로그인 후 소유권 연결(Claim) 전체 흐름 검증.

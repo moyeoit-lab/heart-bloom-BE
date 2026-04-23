@@ -8,6 +8,7 @@ import com.heartbloom.be.app.application.bouquet.implementation.*;
 import com.heartbloom.be.app.application.bouquet.implementation.generator.BouquetLinkTokenGenerator;
 import com.heartbloom.be.app.application.user.implementation.UserManager;
 import com.heartbloom.be.app.security.access.AccessUser;
+import com.heartbloom.be.app.security.access.AuthenticateUser;
 import com.heartbloom.be.common.exception.ServiceException;
 import com.heartbloom.be.common.exception.code.BouquetErrorCode;
 import com.heartbloom.be.common.time.TimeProvider;
@@ -94,7 +95,7 @@ public class BouquetService {
         BouquetReceiver receiver = bouquetReceiverManager.findByBouquetLinkId(link.getId())
                 .orElseThrow(() -> new ServiceException(BouquetErrorCode.BOUQUET_RECEIVER_NOT_FOUND));
 
-        Long userId = user != null ? user.getId() : null;
+        Long userId = user instanceof AuthenticateUser ? user.getId() : null;
 
         // 수신자 답변 저장
         bouquetAnswerManager.createReceiverAnswers(link.getBouquetId(), userId, receiver.getId(), answers);
@@ -110,7 +111,7 @@ public class BouquetService {
 
     @Transactional
     public void claimBouquet(String linkToken, AccessUser user) {
-        if (user == null) {
+        if (!(user instanceof AuthenticateUser)) {
             return;
         }
 

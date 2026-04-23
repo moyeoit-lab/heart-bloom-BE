@@ -1,3 +1,5 @@
+package com.heartbloom.be.app.application.user.implementation;
+
 import com.heartbloom.be.common.time.TimeProvider;
 import com.heartbloom.be.core.model.domain.user.User;
 import com.heartbloom.be.core.model.domain.user.enumerate.AuthProviderType;

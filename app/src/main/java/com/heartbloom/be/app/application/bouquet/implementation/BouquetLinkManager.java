@@ -1,3 +1,5 @@
+package com.heartbloom.be.app.application.bouquet.implementation;
+
 import com.heartbloom.be.core.model.domain.bouquet.BouquetLink;
 import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetLinkStatus;
 import com.heartbloom.be.core.repository.domain.bouquet.BouquetLinkRepository;
