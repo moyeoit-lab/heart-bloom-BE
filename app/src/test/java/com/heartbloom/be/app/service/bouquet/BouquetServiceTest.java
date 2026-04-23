@@ -74,7 +74,9 @@ class BouquetServiceTest {
                     .createdAt(now).modifiedAt(now).build();
 
             Bouquet bouquet = Bouquet.builder()
-                    .id(bouquetId).userId(senderId).displayName("DisplayName")
+                    .id(bouquetId).senderId(senderId).senderType(BouquetSenderType.USER)
+                    .receiverId(null).receiverType(BouquetReceiverType.GUEST)
+                    .displayName("DisplayName")
                     .bouquetTypeId(bouquetTypeId).deleted(false)
                     .createdAt(now).modifiedAt(now).build();
 
