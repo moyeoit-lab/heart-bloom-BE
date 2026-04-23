@@ -1,5 +1,7 @@
 package com.heartbloom.be.core.model.domain.bouquet;
 
+import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetReceiverType;
+import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetSenderType;
 import com.heartbloom.be.core.model.domain.bouquet.enumerate.RelationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +15,10 @@ import java.time.LocalDateTime;
 public class Bouquet {
 
     private Long id;
-    private Long userId;
+    private Long senderId;
+    private BouquetSenderType senderType;
+    private Long receiverId;
+    private BouquetReceiverType receiverType;
     private String displayName;
     private RelationType relationType;
     private Long bouquetTypeId;
@@ -23,14 +28,20 @@ public class Bouquet {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public static Bouquet create(Long userId,
+    public static Bouquet create(Long senderId,
+                          BouquetSenderType senderType,
+                          Long receiverId,
+                          BouquetReceiverType receiverType,
                           String displayName,
                           RelationType relationType,
                           Long bouquetTypeId,
                           LocalDateTime now) {
         return new Bouquet(
                 null,
-                userId,
+                senderId,
+                senderType,
+                receiverId,
+                receiverType,
                 displayName,
                 relationType,
                 bouquetTypeId,
