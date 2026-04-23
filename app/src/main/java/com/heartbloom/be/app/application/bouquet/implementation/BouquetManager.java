@@ -1,5 +1,3 @@
-package com.heartbloom.be.app.application.bouquet.implementation;
-
 import com.heartbloom.be.app.api.bouquet.request.CreateBouquetRequest;
 import com.heartbloom.be.common.time.TimeProvider;
 import com.heartbloom.be.core.model.domain.bouquet.Bouquet;
@@ -9,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +28,8 @@ public class BouquetManager {
         return bouquetRepository.save(bouquet);
     }
 
-
-
+    public Optional<Bouquet> findById(Long id) {
+        return bouquetRepository.findById(id);
+    }
 
 }

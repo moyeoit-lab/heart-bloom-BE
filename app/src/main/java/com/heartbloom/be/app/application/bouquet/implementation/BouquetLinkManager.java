@@ -1,5 +1,3 @@
-package com.heartbloom.be.app.application.bouquet.implementation;
-
 import com.heartbloom.be.core.model.domain.bouquet.BouquetLink;
 import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetLinkStatus;
 import com.heartbloom.be.core.repository.domain.bouquet.BouquetLinkRepository;
@@ -8,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -27,6 +26,18 @@ public class BouquetLinkManager {
         );
 
         return bouquetLinkRepository.save(bouquetLink);
+    }
+
+    public Optional<BouquetLink> findByToken(String linkToken) {
+        return bouquetLinkRepository.findByToken(linkToken);
+    }
+
+    public BouquetLink complete(BouquetLink bouquetLink) {
+        BouquetLink updated = bouquetLink.toBuilder()
+                .status(BouquetLinkStatus.COMPLETED)
+                .modifiedAt(LocalDateTime.now())
+                .build();
+        return bouquetLinkRepository.save(updated);
     }
 
 }
