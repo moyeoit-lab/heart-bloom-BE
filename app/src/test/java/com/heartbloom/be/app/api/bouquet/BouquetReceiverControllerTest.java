@@ -57,7 +57,7 @@ class BouquetReceiverControllerTest {
         // when & then
         mockMvc.perform(get("/api/v1/bouquets/links/{token}", token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("SUCCESS"))
+                .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.senderName").value("Sender"));
     }
 
@@ -75,7 +75,7 @@ class BouquetReceiverControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("SUCCESS"));
+                .andExpect(jsonPath("$.success").value(true));
     }
 
     @Test
@@ -87,6 +87,6 @@ class BouquetReceiverControllerTest {
         // when & then
         mockMvc.perform(post("/api/v1/bouquets/links/{token}/claim", token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("SUCCESS"));
+                .andExpect(jsonPath("$.success").value(true));
     }
 }
