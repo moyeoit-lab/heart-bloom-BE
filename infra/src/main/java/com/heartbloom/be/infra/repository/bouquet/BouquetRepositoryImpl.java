@@ -36,6 +36,11 @@ public class BouquetRepositoryImpl implements BouquetRepository {
     }
 
     @Override
+    public long countAll() {
+        return bouquetJpaDao.countAll();
+    }
+
+    @Override
     public List<Bouquet> findBySender(Long senderId, BouquetSenderType senderType) {
         return bouquetJpaDao.findBySender(senderId, senderType).stream()
                 .map(BouquetConverter::toModel)

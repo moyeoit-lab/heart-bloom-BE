@@ -14,6 +14,8 @@ public interface BouquetRepository {
 
     Optional<Bouquet> findById(Long bouquetId);
 
+    long countAll();
+
     /* 내가 발신자인 부케 목록 조회 */
     List<Bouquet> findBySender(Long senderId, BouquetSenderType senderType);
 
