@@ -32,8 +32,20 @@ public class BouquetReceiverManager {
         return bouquetReceiverRepository.findByBouquetId(bouquetId);
     }
 
+    public Optional<BouquetReceiver> findById(Long id) {
+        return bouquetReceiverRepository.findById(id);
+    }
+
     public Optional<BouquetReceiver> findByBouquetLinkId(Long bouquetLinkId) {
         return bouquetReceiverRepository.findByBouquetLinkId(bouquetLinkId);
+    }
+
+    public BouquetReceiver updateReceiverName(BouquetReceiver receiver, String receiverName) {
+        BouquetReceiver updatedReceiver = receiver.toBuilder()
+                .receiverName(receiverName)
+                .modifiedAt(timeProvider.now())
+                .build();
+        return bouquetReceiverRepository.save(updatedReceiver);
     }
 
     public BouquetReceiver connectUser(BouquetReceiver receiver, Long userId) {

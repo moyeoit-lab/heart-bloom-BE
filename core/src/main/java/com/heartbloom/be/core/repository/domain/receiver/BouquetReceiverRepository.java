@@ -6,6 +6,7 @@ import java.util.Optional;
 
 public interface BouquetReceiverRepository {
     BouquetReceiver save(BouquetReceiver bouquetReceiver);
+    Optional<BouquetReceiver> findById(Long id);
     Optional<BouquetReceiver> findByBouquetId(Long bouquetId);
     Optional<BouquetReceiver> findByBouquetLinkId(Long bouquetLinkId);
 }

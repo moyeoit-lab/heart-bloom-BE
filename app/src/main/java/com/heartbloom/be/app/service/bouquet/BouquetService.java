@@ -69,7 +69,7 @@ public class BouquetService {
         BouquetLink bouquetLink = bouquetLinkManager.create(bouquet.getId(), linkToken, now);
 
         // 5. BouquetReceiver 생성 (익명 프로필)
-        bouquetReceiverManager.create(bouquet.getId(), bouquetLink.getId(), null, request.displayName());
+        bouquetReceiverManager.create(bouquet.getId(), bouquetLink.getId(), null, null);
 
         return CreateBouquetResponse.of(bouquet.getId(), linkToken);
     }
@@ -120,7 +120,7 @@ public class BouquetService {
                     .orElseThrow(() -> new ServiceException(BouquetErrorCode.NOT_FOUND));
             senderName = sender.getName();
         } else {
-            BouquetReceiver senderProfile = bouquetReceiverManager.findByBouquetId(bouquet.getSenderId())
+            BouquetReceiver senderProfile = bouquetReceiverManager.findById(bouquet.getSenderId())
                     .orElseThrow(() -> new ServiceException(BouquetErrorCode.RECEIVER_NOT_FOUND));
             senderName = senderProfile.getReceiverName();
         }
@@ -134,7 +134,7 @@ public class BouquetService {
     }
 
     @Transactional
-    public void completeBouquet(String linkToken, List<CreateBouquetAnswerRequest> answers, AccessUser user) {
+    public void completeBouquet(String linkToken, String receiverName, List<CreateBouquetAnswerRequest> answers, AccessUser user) {
         BouquetLink link = bouquetLinkManager.findByToken(linkToken)
                 .orElseThrow(() -> new ServiceException(BouquetErrorCode.LINK_NOT_FOUND));
 
@@ -147,13 +147,14 @@ public class BouquetService {
 
         BouquetReceiver receiver = bouquetReceiverManager.findByBouquetLinkId(link.getId())
                 .orElseThrow(() -> new ServiceException(BouquetErrorCode.RECEIVER_NOT_FOUND));
+        BouquetReceiver namedReceiver = bouquetReceiverManager.updateReceiverName(receiver, receiverName);
 
         Long currentUserId = user instanceof AuthenticateUser ? user.getId() : null;
 
-        bouquetAnswerManager.createReceiverAnswers(link.getBouquetId(), currentUserId, receiver.getId(), answers);
+        bouquetAnswerManager.createReceiverAnswers(link.getBouquetId(), currentUserId, namedReceiver.getId(), answers);
 
         if (currentUserId != null) {
-            connectUserToBouquet(receiver, bouquet, currentUserId);
+            connectUserToBouquet(namedReceiver, bouquet, currentUserId);
         }
 
         bouquetLinkManager.complete(link);

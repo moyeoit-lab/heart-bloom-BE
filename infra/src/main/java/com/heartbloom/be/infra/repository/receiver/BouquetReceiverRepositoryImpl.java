@@ -23,6 +23,12 @@ public class BouquetReceiverRepositoryImpl implements BouquetReceiverRepository 
     }
 
     @Override
+    public Optional<BouquetReceiver> findById(Long id) {
+        return bouquetReceiverJpaDao.findById(id)
+                .map(BouquetReceiverConverter::toModel);
+    }
+
+    @Override
     public Optional<BouquetReceiver> findByBouquetId(Long bouquetId) {
         return bouquetReceiverJpaDao.findByBouquetId(bouquetId)
                 .map(BouquetReceiverConverter::toModel);

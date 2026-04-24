@@ -29,7 +29,7 @@ public class BouquetReceiverController {
     public ResponseEntity<ApiResponse<Void>> completeBouquet(@PathVariable String token,
                                                             @RequestBody CompleteBouquetRequest request,
                                                             @RequestUser AccessUser user) {
-        bouquetService.completeBouquet(token, request.answers(), user);
+        bouquetService.completeBouquet(token, request.receiverName(), request.answers(), user);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 

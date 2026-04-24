@@ -120,6 +120,52 @@ class BouquetServiceTest {
         }
 
         @Test
+        @DisplayName("답례 부케의 발신자가 게스트이면 BouquetReceiver ID로 발신자 이름을 조회한다")
+        void guestSender() {
+            // given
+            String token = "valid-token";
+            Long bouquetId = 1L;
+            Long senderReceiverId = 10L;
+            Long bouquetTypeId = 2L;
+            LocalDateTime now = LocalDateTime.now();
+
+            BouquetLink link = BouquetLink.builder()
+                    .id(1L).bouquetId(bouquetId).linkToken(token)
+                    .status(BouquetLinkStatus.ACTIVE).expiredAt(now.plusDays(7))
+                    .createdAt(now).modifiedAt(now).build();
+
+            Bouquet bouquet = Bouquet.builder()
+                    .id(bouquetId).senderId(senderReceiverId).senderType(BouquetSenderType.GUEST)
+                    .receiverId(3L).receiverType(BouquetReceiverType.USER)
+                    .displayName("DisplayName")
+                    .bouquetTypeId(bouquetTypeId).deleted(false)
+                    .createdAt(now).modifiedAt(now).build();
+
+            BouquetReceiver senderProfile = BouquetReceiver.builder()
+                    .id(senderReceiverId)
+                    .receiverName("Guest Sender")
+                    .build();
+
+            BouquetType type = BouquetType.builder()
+                    .id(bouquetTypeId).bouquetName("Rose").bouquetDescription("Desc")
+                    .bouquetImageUrl("url").active(true)
+                    .createdAt(now).modifiedAt(now).build();
+
+            given(bouquetLinkManager.findByToken(token)).willReturn(Optional.of(link));
+            given(bouquetManager.findById(bouquetId)).willReturn(Optional.of(bouquet));
+            given(bouquetReceiverManager.findById(senderReceiverId)).willReturn(Optional.of(senderProfile));
+            given(bouquetTypeManager.findById(bouquetTypeId)).willReturn(Optional.of(type));
+            given(bouquetAnswerManager.findByBouquetId(bouquetId)).willReturn(List.of());
+
+            // when
+            GetBouquetForReceiverResponse response = bouquetService.getBouquetForReceiver(token);
+
+            // then
+            assertThat(response.senderName()).isEqualTo("Guest Sender");
+            verify(bouquetReceiverManager).findById(senderReceiverId);
+        }
+
+        @Test
         @DisplayName("만료된 링크 토큰이면 예외를 던진다")
         void expiredLink() {
             // given
@@ -151,18 +197,21 @@ class BouquetServiceTest {
             BouquetLink link = BouquetLink.builder().id(1L).bouquetId(bouquetId).status(BouquetLinkStatus.ACTIVE).build();
             Bouquet bouquet = Bouquet.builder().id(bouquetId).receiverType(BouquetReceiverType.GUEST).build();
             BouquetReceiver receiver = BouquetReceiver.builder().id(receiverId).build();
+            BouquetReceiver namedReceiver = receiver.toBuilder().receiverName("Receiver").build();
             List<CreateBouquetAnswerRequest> answers = List.of(new CreateBouquetAnswerRequest(1L, BouquetAnswerType.SUBJECTIVE, "Answer", 1));
 
             given(bouquetLinkManager.findByToken(token)).willReturn(Optional.of(link));
             given(bouquetManager.findById(bouquetId)).willReturn(Optional.of(bouquet));
             given(bouquetReceiverManager.findByBouquetLinkId(1L)).willReturn(Optional.of(receiver));
+            given(bouquetReceiverManager.updateReceiverName(receiver, "Receiver")).willReturn(namedReceiver);
 
             // when
-            bouquetService.completeBouquet(token, answers, user);
+            bouquetService.completeBouquet(token, "Receiver", answers, user);
 
             // then
             verify(bouquetAnswerManager).createReceiverAnswers(eq(bouquetId), eq(userId), eq(receiverId), anyList());
-            verify(bouquetReceiverManager).connectUser(any(), eq(userId));
+            verify(bouquetReceiverManager).updateReceiverName(receiver, "Receiver");
+            verify(bouquetReceiverManager).connectUser(namedReceiver, userId);
             verify(bouquetLinkManager).complete(any());
         }
 
@@ -176,16 +225,19 @@ class BouquetServiceTest {
             BouquetLink link = BouquetLink.builder().id(1L).bouquetId(1L).status(BouquetLinkStatus.ACTIVE).build();
             Bouquet bouquet = Bouquet.builder().id(1L).receiverType(BouquetReceiverType.GUEST).build();
             BouquetReceiver receiver = BouquetReceiver.builder().id(10L).build();
+            BouquetReceiver namedReceiver = receiver.toBuilder().receiverName("Receiver").build();
             
             given(bouquetLinkManager.findByToken(token)).willReturn(Optional.of(link));
             given(bouquetManager.findById(1L)).willReturn(Optional.of(bouquet));
             given(bouquetReceiverManager.findByBouquetLinkId(1L)).willReturn(Optional.of(receiver));
+            given(bouquetReceiverManager.updateReceiverName(receiver, "Receiver")).willReturn(namedReceiver);
 
             // when
-            bouquetService.completeBouquet(token, List.of(), anonymousUser);
+            bouquetService.completeBouquet(token, "Receiver", List.of(), anonymousUser);
 
             // then
             verify(bouquetAnswerManager).createReceiverAnswers(anyLong(), isNull(), anyLong(), anyList());
+            verify(bouquetReceiverManager).updateReceiverName(receiver, "Receiver");
             verify(bouquetReceiverManager, never()).connectUser(any(), anyLong());
             verify(bouquetLinkManager).complete(any());
         }

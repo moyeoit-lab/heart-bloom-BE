@@ -66,7 +66,7 @@ class BouquetReceiverControllerTest {
     void completeBouquet() throws Exception {
         // given
         String token = "test-token";
-        CompleteBouquetRequest request = new CompleteBouquetRequest(List.of(
+        CompleteBouquetRequest request = new CompleteBouquetRequest("Receiver", List.of(
                 new CreateBouquetAnswerRequest(1L, BouquetAnswerType.SUBJECTIVE, "Answer", 1)
         ));
 

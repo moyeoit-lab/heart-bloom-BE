@@ -27,7 +27,7 @@ public class BouquetReceiverEntity extends BaseEntity {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "receiver_name", nullable = false, length = 100)
+    @Column(name = "receiver_name", length = 100)
     private String receiverName;
 
     @Builder
