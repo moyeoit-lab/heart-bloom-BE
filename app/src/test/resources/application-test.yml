@@ -1,0 +1,53 @@
+# ==========================
+#          테스트옵션
+# ==========================
+
+# DataSource — H2 인메모리 (DataSourceConfig의 storage.datasource.core 키 override)
+# build.gradle에 testRuntimeOnly 'com.h2database:h2' 추가 필요
+storage:
+  datasource:
+    core:
+      driver-class-name: org.h2.Driver
+      jdbc-url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      username: sa
+      password:
+      pool-name: core-db-pool-test
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+
+  flyway:
+    enabled: false
+
+jwt:
+  secret: dGhpc2lzdGVzdHNlY3JldGtleWRvbnR1c2V0aGlzc2VjcmV0a2V5
+  access:
+    expire-time: 1000000000
+  refresh:
+    expire-time: 1000000000
+
+bouquet:
+  link:
+    prefix: http://localhost:3000/bouquet/
+
+oauth2:
+  kakao:
+    auth:
+      client-id: test-client-id
+      client-secret: test-client-secret
+      client-name: kakao
+      redirect-uri: http://localhost:8080/auth/oauth2/kakao
+      scope:
+        - profile_nickname
+        - account_email
+    api:
+      authorization-uri: https://kauth.kakao.com/oauth/authorize
+      token-uri: https://kauth.kakao.com/oauth/token
+      user-info-uri: https://kapi.kakao.com/v2/user/me
