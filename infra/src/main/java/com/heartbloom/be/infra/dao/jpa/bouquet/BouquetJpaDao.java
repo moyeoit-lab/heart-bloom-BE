@@ -17,6 +17,9 @@ public interface BouquetJpaDao extends JpaRepository<BouquetEntity, Long> {
     @Query("SELECT b FROM BouquetEntity b WHERE b.id = :bouquetId AND b.deleted = FALSE")
     Optional<BouquetEntity> findById(@Param("bouquetId") Long bouquetId);
 
+    @Query("SELECT COUNT(b) FROM BouquetEntity b")
+    long countAll();
+
     @Query("SELECT b FROM BouquetEntity b WHERE b.senderId = :senderId AND b.senderType = :senderType AND b.deleted = FALSE")
     List<BouquetEntity> findBySender(@Param("senderId") Long senderId, @Param("senderType") BouquetSenderType senderType);
 

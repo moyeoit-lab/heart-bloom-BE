@@ -1,5 +1,6 @@
 package com.heartbloom.be.app.service.bouquet;
 
+import com.heartbloom.be.app.api.bouquet.response.GetBouquetCountResponse;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetDisplayStandResponse;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetResponse;
 import com.heartbloom.be.app.security.access.AccessUser;
@@ -33,6 +34,11 @@ public class BouquetQueryService {
                 .toList();
 
         return new GetBouquetDisplayStandResponse(sent, received);
+    }
+
+    @Transactional(readOnly = true)
+    public GetBouquetCountResponse getBouquetCount() {
+        return new GetBouquetCountResponse(bouquetRepository.countAll());
     }
 
 }
