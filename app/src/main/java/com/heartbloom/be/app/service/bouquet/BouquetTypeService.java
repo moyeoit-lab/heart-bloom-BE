@@ -5,6 +5,7 @@ import com.heartbloom.be.core.model.domain.bouquet.BouquetType;
 import com.heartbloom.be.core.repository.domain.bouquet.BouquetTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class BouquetTypeService {
 
     private final BouquetTypeRepository bouquetTypeRepository;
 
+    @Transactional(readOnly = true)
     public List<GetBouquetTypeResponse> getBouquetTypes() {
         List<BouquetType> types = bouquetTypeRepository.findAll();
         return types.stream()

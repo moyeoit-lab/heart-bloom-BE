@@ -1,5 +1,6 @@
 package com.heartbloom.be.app.service.bouquet;
 
+import com.heartbloom.be.app.api.bouquet.response.GetBouquetDisplayStandResponse;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetResponse;
 import com.heartbloom.be.app.security.access.AccessUser;
 import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetReceiverType;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +19,7 @@ public class BouquetQueryService {
     private final BouquetRepository bouquetRepository;
 
     @Transactional(readOnly = true)
-    public List<GetBouquetResponse> getBouquets(AccessUser user) {
+    public GetBouquetDisplayStandResponse getBouquetDisplayStand(AccessUser user) {
         // 내가 보낸 부케 목록 조회
         List<GetBouquetResponse> sent = bouquetRepository.querySentBouquets(user.getId(), BouquetSenderType.USER)
                 .stream()
@@ -32,7 +32,7 @@ public class BouquetQueryService {
                 .map(GetBouquetResponse::of)
                 .toList();
 
-        return Stream.concat(sent.stream(), received.stream()).toList();
+        return new GetBouquetDisplayStandResponse(sent, received);
     }
 
 }

@@ -17,6 +17,9 @@ public class BouquetLinkController {
 
     private final BouquetLinkService bouquetLinkService;
 
+    /**
+     * 꽃다발 링크 URL 조회
+     */
     @GetMapping("/{bouquetId}/url")
     public ResponseEntity<ApiResponse<GetBouquetLinkUrlResponse>> getBouquetLinkUrl(@PathVariable Long bouquetId) {
         String url = bouquetLinkService.getBouquetLinkUrl(bouquetId);
