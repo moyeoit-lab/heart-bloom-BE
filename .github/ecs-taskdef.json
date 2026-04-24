@@ -1,0 +1,48 @@
+{
+  "family": "${TASK_FAMILY}",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "${TASK_CPU}",
+  "memory": "${TASK_MEMORY}",
+  "executionRoleArn": "${EXECUTION_ROLE_ARN}",
+  "taskRoleArn": "${TASK_ROLE_ARN}",
+  "containerDefinitions": [
+    {
+      "name": "${CONTAINER_NAME}",
+      "image": "${IMAGE_PLACEHOLDER}",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        { "name": "SPRING_PROFILES_ACTIVE", "value": "${SPRING_PROFILES_ACTIVE}" },
+        { "name": "SERVER_SERVLET_CONTEXT_PATH", "value": "${SERVER_CONTEXT_PATH}" },
+        { "name": "STORAGE_DATASOURCE_CORE_JDBC_URL", "value": "${STORAGE_DATASOURCE_CORE_JDBC_URL}" },
+        { "name": "STORAGE_DATASOURCE_CORE_USERNAME", "value": "${STORAGE_DATASOURCE_CORE_USERNAME}" },
+        { "name": "STORAGE_DATASOURCE_CORE_DRIVER_CLASS_NAME", "value": "${STORAGE_DATASOURCE_CORE_DRIVER_CLASS_NAME}" },
+        { "name": "STORAGE_DATASOURCE_CORE_POOL_NAME", "value": "${STORAGE_DATASOURCE_CORE_POOL_NAME}" }
+      ],
+      "secrets": [
+        { "name": "STORAGE_DATASOURCE_CORE_PASSWORD", "valueFrom": "${SECRET_ARN_DB_PASSWORD}" },
+        { "name": "JWT_SECRET", "valueFrom": "${SECRET_ARN_JWT_SECRET}" },
+        { "name": "ACCESS_EXPIRE_TIME", "valueFrom": "${SECRET_ARN_ACCESS_EXPIRE_TIME}" },
+        { "name": "REFRESH_EXPIRE_TIME", "valueFrom": "${SECRET_ARN_REFRESH_EXPIRE_TIME}" },
+        { "name": "KAKAO_CLIENT_ID", "valueFrom": "${SECRET_ARN_KAKAO_CLIENT_ID}" },
+        { "name": "KAKAO_CLIENT_SECRET", "valueFrom": "${SECRET_ARN_KAKAO_CLIENT_SECRET}" },
+        { "name": "KAKAO_REDIRECT_URL", "valueFrom": "${SECRET_ARN_KAKAO_REDIRECT_URL}" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "${AWSLOGS_GROUP}",
+          "awslogs-region": "${AWS_REGION}",
+          "awslogs-stream-prefix": "${AWSLOGS_STREAM_PREFIX}"
+        }
+      }
+    }
+  ]
+}

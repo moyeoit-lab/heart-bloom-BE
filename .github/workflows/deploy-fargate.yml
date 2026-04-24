@@ -1,0 +1,99 @@
+name: Deploy to ECS Fargate
+
+on:
+  push:
+    branches: ["dev"]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-dev-fargate
+  cancel-in-progress: true
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+  ECS_CLUSTER: ${{ vars.ECS_CLUSTER }}
+  ECS_SERVICE: ${{ vars.ECS_SERVICE }}
+  ECS_TASK_DEFINITION_TEMPLATE: .github/ecs-taskdef.json
+  ECS_TASK_DEFINITION_RENDERED: /tmp/ecs-taskdef.rendered.json
+  TASK_FAMILY: ${{ vars.TASK_FAMILY }}
+  TASK_CPU: ${{ vars.TASK_CPU }}
+  TASK_MEMORY: ${{ vars.TASK_MEMORY }}
+  CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+  SPRING_PROFILES_ACTIVE: ${{ vars.SPRING_PROFILES_ACTIVE }}
+  SERVER_CONTEXT_PATH: ${{ vars.SERVER_CONTEXT_PATH }}
+  STORAGE_DATASOURCE_CORE_JDBC_URL: ${{ vars.STORAGE_DATASOURCE_CORE_JDBC_URL }}
+  STORAGE_DATASOURCE_CORE_USERNAME: ${{ vars.STORAGE_DATASOURCE_CORE_USERNAME }}
+  STORAGE_DATASOURCE_CORE_DRIVER_CLASS_NAME: ${{ vars.STORAGE_DATASOURCE_CORE_DRIVER_CLASS_NAME }}
+  STORAGE_DATASOURCE_CORE_POOL_NAME: ${{ vars.STORAGE_DATASOURCE_CORE_POOL_NAME }}
+  EXECUTION_ROLE_ARN: ${{ vars.EXECUTION_ROLE_ARN }}
+  TASK_ROLE_ARN: ${{ vars.TASK_ROLE_ARN }}
+  AWSLOGS_GROUP: ${{ vars.AWSLOGS_GROUP }}
+  AWSLOGS_STREAM_PREFIX: ${{ vars.AWSLOGS_STREAM_PREFIX }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push image
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker buildx build --platform linux/amd64 -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" --load .
+          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Render ECS task definition template
+        run: |
+          if ! command -v envsubst >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y gettext-base
+          fi
+          envsubst < "$ECS_TASK_DEFINITION_TEMPLATE" > "$ECS_TASK_DEFINITION_RENDERED"
+        env:
+          IMAGE_PLACEHOLDER: placeholder:latest
+          SECRET_ARN_DB_PASSWORD: ${{ secrets.SECRET_ARN_DB_PASSWORD }}
+          SECRET_ARN_JWT_SECRET: ${{ secrets.SECRET_ARN_JWT_SECRET }}
+          SECRET_ARN_ACCESS_EXPIRE_TIME: ${{ secrets.SECRET_ARN_ACCESS_EXPIRE_TIME }}
+          SECRET_ARN_REFRESH_EXPIRE_TIME: ${{ secrets.SECRET_ARN_REFRESH_EXPIRE_TIME }}
+          SECRET_ARN_KAKAO_CLIENT_ID: ${{ secrets.SECRET_ARN_KAKAO_CLIENT_ID }}
+          SECRET_ARN_KAKAO_CLIENT_SECRET: ${{ secrets.SECRET_ARN_KAKAO_CLIENT_SECRET }}
+          SECRET_ARN_KAKAO_REDIRECT_URL: ${{ secrets.SECRET_ARN_KAKAO_REDIRECT_URL }}
+
+      - name: Render ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION_RENDERED }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
