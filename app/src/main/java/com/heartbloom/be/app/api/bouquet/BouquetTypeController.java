@@ -4,7 +4,6 @@ import com.heartbloom.be.app.api.bouquet.response.GetBouquetTypeResponse;
 import com.heartbloom.be.app.api.exception.response.ApiResponse;
 import com.heartbloom.be.app.service.bouquet.BouquetTypeService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +18,9 @@ public class BouquetTypeController {
 
     private final BouquetTypeService bouquetTypeService;
 
+    /**
+     * 꽃다발 타입 조회
+     */
     @GetMapping
     public ResponseEntity<ApiResponse<List<GetBouquetTypeResponse>>> getBouquetTypes() {
         List<GetBouquetTypeResponse> result = bouquetTypeService.getBouquetTypes();
