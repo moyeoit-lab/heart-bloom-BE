@@ -7,7 +7,9 @@ import com.heartbloom.be.infra.entity.converter.BouquetTypeConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,4 +22,13 @@ public class BouquetTypeRepositoryImpl implements BouquetTypeRepository {
         return bouquetTypeJpaDao.findById(id)
                 .map(BouquetTypeConverter::toModel);
     }
+
+    @Override
+    public List<BouquetType> findAll() {
+        return bouquetTypeJpaDao.findALlByActive(true)
+                .stream()
+                .map(BouquetTypeConverter::toModel)
+                .collect(Collectors.toList());
+    }
+
 }
