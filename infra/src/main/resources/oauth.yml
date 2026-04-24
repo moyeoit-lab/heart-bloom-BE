@@ -5,7 +5,7 @@ oauth2:
       client-secret: 'test-client-secret'
       client-name: 'test-client-name'
       authorization-grant-type: 'test-authorization-grant-type'
-      redirect-uri: 'test-redirect-uri'
+      redirect-uri: 'http://localhost:3000/oauth/callback/kakao'
       scope:
         - 'test_scope'
       client-authentication-method: 'test-client-authentication-method'
@@ -26,7 +26,7 @@ oauth2:
       client-name: kakao
       client-id: ${DEV_KAKAO_CLIENT_ID}
       client-secret: ${DEV_KAKAO_CLIENT_SECRET}
-      redirect-uri: ${DEV_KAKAO_REDIRECT_URL}
+      redirect-uri: ${DEV_KAKAO_REDIRECT_URL:https://heart-bloom-fe.vercel.app/oauth/callback/kakao}
       scope:
         - profile_nickname
         - account_email
@@ -45,7 +45,7 @@ oauth2:
       client-name: kakao
       client-id: ${KAKAO_CLIENT_ID}
       client-secret: ${KAKAO_CLIENT_SECRET}
-      redirect-uri: ${KAKAO_REDIRECT_URL}
+      redirect-uri: ${KAKAO_REDIRECT_URL:https://heart-bloom-fe.vercel.app/oauth/callback/kakao}
       scope:
         - profile_nickname
         - account_email

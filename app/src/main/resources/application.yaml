@@ -61,6 +61,9 @@ jwt:
   refresh:
     expire-time: ${DEV_REFRESH_EXPIRE_TIME}
 
+bouquet:
+  link:
+    prefix: ${DEV_BOUQUET_LINK_PREFIX:https://heart-bloom-fe.vercel.app/bouquet/}
 
 ---
 # ==========================
@@ -81,4 +84,4 @@ jwt:
 
 bouquet:
   link:
-    prefix: https://heartbloom.com/bouquet/
+    prefix: ${BOUQUET_LINK_PREFIX:https://heart-bloom-fe.vercel.app/bouquet/}

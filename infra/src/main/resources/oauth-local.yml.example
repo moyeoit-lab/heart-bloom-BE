@@ -7,7 +7,7 @@ oauth2:
       client-secret: 'test-client-secret'
       client-name: 'test-client-name'
       authorization-grant-type: 'test-authorization-grant-type'
-      redirect-uri: 'test-redirect-uri'
+      redirect-uri: 'http://localhost:3000/oauth/callback/kakao'
       scope:
         - 'test_scope'
       client-authentication-method: 'test-client-authentication-method'
