@@ -1,3 +1,7 @@
+# ==========================
+#          기본옵션
+# ==========================
+
 spring.application.name: app
 spring.profiles.active: local
 
@@ -28,7 +32,15 @@ jwt:
   refresh:
     expire-time: 1000000000
 
+bouquet:
+  link:
+    prefix: http://localhost:3000/bouquet/
+
 ---
+# ==========================
+#          로컬옵션
+# ==========================
+
 spring.config.activate.on-profile: local
 
 spring:
@@ -36,9 +48,10 @@ spring:
     import:
       - optional:oauth-local.yml
 
-
-
 ---
+# ==========================
+#          개발옵션
+# ==========================
 spring.config.activate.on-profile: dev
 
 jwt:
@@ -50,6 +63,9 @@ jwt:
 
 
 ---
+# ==========================
+#          운영옵션
+# ==========================
 spring.config.activate.on-profile: prod
 
 server:
@@ -62,3 +78,7 @@ jwt:
     expire-time: ${ACCESS_EXPIRE_TIME}
   refresh:
     expire-time: ${REFRESH_EXPIRE_TIME}
+
+bouquet:
+  link:
+    prefix: https://heartbloom.com/bouquet/
