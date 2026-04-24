@@ -13,6 +13,7 @@ import com.heartbloom.be.infra.client.auth.response.OAuth2UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +31,7 @@ public class AuthService {
         return oAuth2Client.getLoginUrl(redirectUri, state);
     }
 
+    @Transactional
     public TokenResult login(String code, String redirectUri, String provider) {
         OAuth2Client oAuth2Client = oAuth2ClientFactory.getOAuth2Client(provider);
         OAuth2TokenResponse token = oAuth2Client.getToken(code, redirectUri);
