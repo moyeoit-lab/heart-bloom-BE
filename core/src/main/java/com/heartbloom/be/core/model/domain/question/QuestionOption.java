@@ -1,11 +1,9 @@
 package com.heartbloom.be.core.model.domain.question;
 
-import com.sun.jdi.IntegerType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
