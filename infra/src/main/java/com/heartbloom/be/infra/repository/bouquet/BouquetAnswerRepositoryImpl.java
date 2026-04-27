@@ -38,4 +38,12 @@ public class BouquetAnswerRepositoryImpl implements BouquetAnswerRepository {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<BouquetAnswer> findByBouquetIdAndQuestionId(Long bouquetId, Long questionId) {
+        return bouquetAnswerJpaDao.findByBouquetIdAndQuestionId(bouquetId, questionId)
+                .stream()
+                .map(BouquetAnswerConverter::toModel)
+                .collect(Collectors.toList());
+    }
+
 }

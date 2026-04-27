@@ -2,6 +2,7 @@ package com.heartbloom.be.app.service.bouquet;
 
 import com.heartbloom.be.app.api.bouquet.request.CreateBouquetAnswerRequest;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetForReceiverResponse;
+import com.heartbloom.be.app.api.bouquet.response.GetBouquetQuestionAnswersResponse;
 import com.heartbloom.be.app.application.bouquet.implementation.*;
 import com.heartbloom.be.app.application.user.implementation.UserManager;
 import com.heartbloom.be.app.security.access.AuthenticateUser;
@@ -10,6 +11,7 @@ import com.heartbloom.be.common.exception.ServiceException;
 import com.heartbloom.be.common.exception.code.BouquetErrorCode;
 import com.heartbloom.be.common.time.TimeProvider;
 import com.heartbloom.be.core.model.domain.answer.BouquetAnswer;
+import com.heartbloom.be.core.model.domain.answer.enumerate.BouquetAnswerRespondentType;
 import com.heartbloom.be.core.model.domain.answer.enumerate.BouquetAnswerType;
 import com.heartbloom.be.core.model.domain.bouquet.Bouquet;
 import com.heartbloom.be.core.model.domain.bouquet.BouquetLink;
@@ -67,7 +69,7 @@ class BouquetServiceTest {
     class GetBouquetForReceiver {
 
         @Test
-        @DisplayName("유효한 토큰으로 조회 시 부케 정보와 질문 리스트를 반환한다")
+        @DisplayName("유효한 토큰으로 조회 시 부케 정보만 반환한다")
         void success() {
             // given
             String token = "valid-token";
@@ -98,17 +100,10 @@ class BouquetServiceTest {
                     .bouquetImageUrl("url").active(true)
                     .createdAt(now).modifiedAt(now).build();
 
-            BouquetAnswer answer = BouquetAnswer.builder()
-                    .id(10L).bouquetId(bouquetId).questionId(100L)
-                    .answerType(BouquetAnswerType.SUBJECTIVE).userId(senderId)
-                    .subjectiveContent("Answer").sortOrder(1)
-                    .createdAt(now).modifiedAt(now).build();
-
             given(bouquetLinkManager.findByToken(token)).willReturn(Optional.of(link));
             given(bouquetManager.findById(bouquetId)).willReturn(Optional.of(bouquet));
             given(userManager.findById(senderId)).willReturn(Optional.of(sender));
             given(bouquetTypeManager.findById(bouquetTypeId)).willReturn(Optional.of(type));
-            given(bouquetAnswerManager.findByBouquetId(bouquetId)).willReturn(List.of(answer));
 
             // when
             GetBouquetForReceiverResponse response = bouquetService.getBouquetForReceiver(token);
@@ -116,7 +111,7 @@ class BouquetServiceTest {
             // then
             assertThat(response.senderName()).isEqualTo("Sender");
             assertThat(response.bouquetName()).isEqualTo("Rose");
-            assertThat(response.senderAnswers()).hasSize(1);
+            verify(bouquetAnswerManager, never()).findByBouquetId(anyLong());
         }
 
         @Test
@@ -155,8 +150,6 @@ class BouquetServiceTest {
             given(bouquetManager.findById(bouquetId)).willReturn(Optional.of(bouquet));
             given(bouquetReceiverManager.findById(senderReceiverId)).willReturn(Optional.of(senderProfile));
             given(bouquetTypeManager.findById(bouquetTypeId)).willReturn(Optional.of(type));
-            given(bouquetAnswerManager.findByBouquetId(bouquetId)).willReturn(List.of());
-
             // when
             GetBouquetForReceiverResponse response = bouquetService.getBouquetForReceiver(token);
 
@@ -175,6 +168,73 @@ class BouquetServiceTest {
 
             // when & then
             assertThatThrownBy(() -> bouquetService.getBouquetForReceiver(token))
+                    .isInstanceOf(ServiceException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", BouquetErrorCode.LINK_EXPIRED);
+        }
+    }
+
+    @Nested
+    @DisplayName("getQuestionAnswers 테스트")
+    class GetQuestionAnswers {
+
+        @Test
+        @DisplayName("유효한 토큰과 질문 ID로 발신자/수신자 답변을 조회한다")
+        void success() {
+            // given
+            String token = "valid-token";
+            Long bouquetId = 1L;
+            Long questionId = 100L;
+            LocalDateTime now = LocalDateTime.now();
+
+            BouquetLink link = BouquetLink.builder()
+                    .id(1L).bouquetId(bouquetId).linkToken(token)
+                    .status(BouquetLinkStatus.ACTIVE).expiredAt(now.plusDays(7))
+                    .createdAt(now).modifiedAt(now).build();
+
+            Bouquet bouquet = Bouquet.builder()
+                    .id(bouquetId)
+                    .deleted(false)
+                    .createdAt(now).modifiedAt(now).build();
+
+            BouquetAnswer senderAnswer = BouquetAnswer.builder()
+                    .id(10L).bouquetId(bouquetId).questionId(questionId)
+                    .answerType(BouquetAnswerType.SUBJECTIVE)
+                    .respondentType(BouquetAnswerRespondentType.SENDER)
+                    .subjectiveContent("Sender answer")
+                    .sortOrder(1)
+                    .createdAt(now).modifiedAt(now).build();
+            BouquetAnswer receiverAnswer = BouquetAnswer.builder()
+                    .id(20L).bouquetId(bouquetId).questionId(questionId)
+                    .answerType(BouquetAnswerType.SUBJECTIVE)
+                    .respondentType(BouquetAnswerRespondentType.RECEIVER)
+                    .subjectiveContent("Receiver answer")
+                    .sortOrder(1)
+                    .createdAt(now).modifiedAt(now).build();
+
+            given(bouquetLinkManager.findByToken(token)).willReturn(Optional.of(link));
+            given(bouquetManager.findById(bouquetId)).willReturn(Optional.of(bouquet));
+            given(bouquetAnswerManager.findByBouquetIdAndQuestionId(bouquetId, questionId))
+                    .willReturn(List.of(senderAnswer, receiverAnswer));
+
+            // when
+            GetBouquetQuestionAnswersResponse response = bouquetService.getQuestionAnswers(token, questionId);
+
+            // then
+            assertThat(response.questionId()).isEqualTo(questionId);
+            assertThat(response.senderAnswer().subjectiveContent()).isEqualTo("Sender answer");
+            assertThat(response.receiverAnswer().subjectiveContent()).isEqualTo("Receiver answer");
+        }
+
+        @Test
+        @DisplayName("만료된 링크 토큰이면 예외를 던진다")
+        void expiredLink() {
+            // given
+            String token = "expired-token";
+            BouquetLink link = BouquetLink.builder().status(BouquetLinkStatus.EXPIRED).build();
+            given(bouquetLinkManager.findByToken(token)).willReturn(Optional.of(link));
+
+            // when & then
+            assertThatThrownBy(() -> bouquetService.getQuestionAnswers(token, 1L))
                     .isInstanceOf(ServiceException.class)
                     .hasFieldOrPropertyWithValue("errorCode", BouquetErrorCode.LINK_EXPIRED);
         }

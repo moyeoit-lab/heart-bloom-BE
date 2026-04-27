@@ -2,6 +2,7 @@ package com.heartbloom.be.app.api.bouquet;
 
 import com.heartbloom.be.app.api.bouquet.request.CompleteBouquetRequest;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetForReceiverResponse;
+import com.heartbloom.be.app.api.bouquet.response.GetBouquetQuestionAnswersResponse;
 import com.heartbloom.be.app.api.exception.response.ApiResponse;
 import com.heartbloom.be.app.security.access.AccessUser;
 import com.heartbloom.be.app.security.access.RequestUser;
@@ -17,10 +18,18 @@ public class BouquetReceiverController {
 
     private final BouquetService bouquetService;
 
-    /* 수신자용 부케 정보 및 질문 조회 (비로그인 허용) */
+    /* 수신자용 부케 정보 조회 (비로그인 허용) */
     @GetMapping
     public ResponseEntity<ApiResponse<GetBouquetForReceiverResponse>> getBouquet(@PathVariable String token) {
         ApiResponse<GetBouquetForReceiverResponse> response = ApiResponse.success(bouquetService.getBouquetForReceiver(token));
+        return ResponseEntity.ok(response);
+    }
+
+    /* 질문별 발신자/수신자 답변 조회 (비로그인 허용) */
+    @GetMapping("/questions/{questionId}/answers")
+    public ResponseEntity<ApiResponse<GetBouquetQuestionAnswersResponse>> getQuestionAnswers(@PathVariable String token,
+                                                                                            @PathVariable Long questionId) {
+        ApiResponse<GetBouquetQuestionAnswersResponse> response = ApiResponse.success(bouquetService.getQuestionAnswers(token, questionId));
         return ResponseEntity.ok(response);
     }
 

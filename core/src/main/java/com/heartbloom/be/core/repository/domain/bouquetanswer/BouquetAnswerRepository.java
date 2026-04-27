@@ -13,4 +13,6 @@ public interface BouquetAnswerRepository {
 
     List<BouquetAnswer> findByBouquetId(Long bouquetId);
 
+    List<BouquetAnswer> findByBouquetIdAndQuestionId(Long bouquetId, Long questionId);
+
 }

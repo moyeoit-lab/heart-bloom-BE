@@ -19,4 +19,14 @@ public interface BouquetAnswerJpaDao extends JpaRepository<BouquetAnswerEntity, 
     @Query("SELECT ba FROM BouquetAnswerEntity ba WHERE ba.bouquetId = :bouquetId")
     List<BouquetAnswerEntity> findByBouquetId(@Param("bouquetId") Long bouquetId);
 
+    @Query("""
+            SELECT ba
+            FROM BouquetAnswerEntity ba
+            WHERE ba.bouquetId = :bouquetId
+              AND ba.questionId = :questionId
+            ORDER BY ba.respondentType ASC, ba.sortOrder ASC, ba.id ASC
+            """)
+    List<BouquetAnswerEntity> findByBouquetIdAndQuestionId(@Param("bouquetId") Long bouquetId,
+                                                           @Param("questionId") Long questionId);
+
 }

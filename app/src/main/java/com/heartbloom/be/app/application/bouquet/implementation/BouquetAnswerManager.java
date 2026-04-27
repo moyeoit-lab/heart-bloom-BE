@@ -29,6 +29,10 @@ public class BouquetAnswerManager {
         return bouquetAnswerRepository.findByBouquetId(bouquetId);
     }
 
+    public List<BouquetAnswer> findByBouquetIdAndQuestionId(Long bouquetId, Long questionId) {
+        return bouquetAnswerRepository.findByBouquetIdAndQuestionId(bouquetId, questionId);
+    }
+
     public List<BouquetAnswer> createReceiverAnswers(Long bouquetId, Long userId, Long receiverId, List<CreateBouquetAnswerRequest> requests) {
         LocalDateTime now = timeProvider.now();
         return requests.stream()

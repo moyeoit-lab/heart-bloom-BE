@@ -4,6 +4,7 @@ import com.heartbloom.be.app.api.bouquet.request.CreateBouquetAnswerRequest;
 import com.heartbloom.be.app.api.bouquet.request.CreateBouquetRequest;
 import com.heartbloom.be.app.api.bouquet.response.CreateBouquetResponse;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetForReceiverResponse;
+import com.heartbloom.be.app.api.bouquet.response.GetBouquetQuestionAnswersResponse;
 import com.heartbloom.be.app.application.bouquet.implementation.*;
 import com.heartbloom.be.app.application.bouquet.implementation.generator.BouquetLinkTokenGenerator;
 import com.heartbloom.be.app.application.user.implementation.UserManager;
@@ -128,9 +129,23 @@ public class BouquetService {
         BouquetType bouquetType = bouquetTypeManager.findById(bouquet.getBouquetTypeId())
                 .orElseThrow(() -> new ServiceException(BouquetErrorCode.TYPE_NOT_FOUND));
 
-        List<BouquetAnswer> senderAnswers = bouquetAnswerManager.findByBouquetId(bouquet.getId());
+        return GetBouquetForReceiverResponse.of(senderName, bouquetType);
+    }
 
-        return GetBouquetForReceiverResponse.of(senderName, bouquetType, senderAnswers);
+    @Transactional(readOnly = true)
+    public GetBouquetQuestionAnswersResponse getQuestionAnswers(String linkToken, Long questionId) {
+        BouquetLink link = bouquetLinkManager.findByToken(linkToken)
+                .orElseThrow(() -> new ServiceException(BouquetErrorCode.LINK_NOT_FOUND));
+
+        if (link.getStatus() == BouquetLinkStatus.EXPIRED) {
+            throw new ServiceException(BouquetErrorCode.LINK_EXPIRED);
+        }
+
+        Bouquet bouquet = bouquetManager.findById(link.getBouquetId())
+                .orElseThrow(() -> new ServiceException(BouquetErrorCode.NOT_FOUND));
+
+        List<BouquetAnswer> answers = bouquetAnswerManager.findByBouquetIdAndQuestionId(bouquet.getId(), questionId);
+        return GetBouquetQuestionAnswersResponse.of(questionId, answers);
     }
 
     @Transactional

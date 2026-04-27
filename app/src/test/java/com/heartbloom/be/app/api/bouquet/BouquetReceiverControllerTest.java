@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heartbloom.be.app.api.bouquet.request.CompleteBouquetRequest;
 import com.heartbloom.be.app.api.bouquet.request.CreateBouquetAnswerRequest;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetForReceiverResponse;
+import com.heartbloom.be.app.api.bouquet.response.GetBouquetQuestionAnswersResponse;
 import com.heartbloom.be.app.security.access.RequestUserArgumentResolver;
 import com.heartbloom.be.app.service.bouquet.BouquetService;
 import com.heartbloom.be.core.model.domain.answer.enumerate.BouquetAnswerType;
@@ -51,14 +52,37 @@ class BouquetReceiverControllerTest {
     void getBouquet() throws Exception {
         // given
         String token = "test-token";
-        GetBouquetForReceiverResponse response = new GetBouquetForReceiverResponse("Sender", "Bouquet", "url", List.of());
+        GetBouquetForReceiverResponse response = new GetBouquetForReceiverResponse("Sender", "Bouquet", "url");
         given(bouquetService.getBouquetForReceiver(token)).willReturn(response);
 
         // when & then
         mockMvc.perform(get("/api/v1/bouquets/links/{token}", token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.senderName").value("Sender"));
+                .andExpect(jsonPath("$.data.senderName").value("Sender"))
+                .andExpect(jsonPath("$.data.senderAnswers").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("질문별 발신자/수신자 답변을 조회할 수 있다")
+    void getQuestionAnswers() throws Exception {
+        // given
+        String token = "test-token";
+        Long questionId = 1L;
+        GetBouquetQuestionAnswersResponse response = new GetBouquetQuestionAnswersResponse(
+                questionId,
+                new GetBouquetQuestionAnswersResponse.BouquetAnswerResponse(10L, "Sender answer", null, 1),
+                new GetBouquetQuestionAnswersResponse.BouquetAnswerResponse(20L, "Receiver answer", null, 1)
+        );
+        given(bouquetService.getQuestionAnswers(token, questionId)).willReturn(response);
+
+        // when & then
+        mockMvc.perform(get("/api/v1/bouquets/links/{token}/questions/{questionId}/answers", token, questionId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.questionId").value(1L))
+                .andExpect(jsonPath("$.data.senderAnswer.subjectiveContent").value("Sender answer"))
+                .andExpect(jsonPath("$.data.receiverAnswer.subjectiveContent").value("Receiver answer"));
     }
 
     @Test
