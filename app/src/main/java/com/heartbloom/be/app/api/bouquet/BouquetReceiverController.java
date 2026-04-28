@@ -3,6 +3,7 @@ package com.heartbloom.be.app.api.bouquet;
 import com.heartbloom.be.app.api.bouquet.request.CompleteBouquetRequest;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetForReceiverResponse;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetQuestionAnswersResponse;
+import com.heartbloom.be.app.api.contract.BouquetReceiverApi;
 import com.heartbloom.be.app.api.exception.response.ApiResponse;
 import com.heartbloom.be.app.security.access.AccessUser;
 import com.heartbloom.be.app.security.access.RequestUser;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/bouquets/links/{token}")
-public class BouquetReceiverController {
+public class BouquetReceiverController implements BouquetReceiverApi {
 
     private final BouquetService bouquetService;
 

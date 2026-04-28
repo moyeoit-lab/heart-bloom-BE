@@ -1,5 +1,6 @@
 package com.heartbloom.be.app.api.question;
 
+import com.heartbloom.be.app.api.contract.QuestionApi;
 import com.heartbloom.be.app.api.exception.response.ApiResponse;
 import com.heartbloom.be.app.api.question.response.GetQuestionLandingResponse;
 import com.heartbloom.be.app.service.question.QuestionService;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/questions")
-public class QuestionController {
+public class QuestionController implements QuestionApi {
 
     private final QuestionService questionService;
 

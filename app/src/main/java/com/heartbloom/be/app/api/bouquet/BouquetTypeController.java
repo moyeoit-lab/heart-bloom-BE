@@ -1,6 +1,7 @@
 package com.heartbloom.be.app.api.bouquet;
 
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetTypeResponse;
+import com.heartbloom.be.app.api.contract.BouquetTypeApi;
 import com.heartbloom.be.app.api.exception.response.ApiResponse;
 import com.heartbloom.be.app.service.bouquet.BouquetTypeService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/bouquet/type")
-public class BouquetTypeController {
+public class BouquetTypeController implements BouquetTypeApi {
 
     private final BouquetTypeService bouquetTypeService;
 

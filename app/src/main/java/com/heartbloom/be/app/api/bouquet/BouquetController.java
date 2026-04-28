@@ -4,6 +4,7 @@ import com.heartbloom.be.app.api.bouquet.request.CreateBouquetRequest;
 import com.heartbloom.be.app.api.bouquet.response.CreateBouquetResponse;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetCountResponse;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetDisplayStandResponse;
+import com.heartbloom.be.app.api.contract.BouquetApi;
 import com.heartbloom.be.app.api.exception.response.ApiResponse;
 import com.heartbloom.be.app.security.access.AccessUser;
 import com.heartbloom.be.app.security.access.RequestUser;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/bouquet")
-public class BouquetController {
+public class BouquetController implements BouquetApi {
 
     private final BouquetService bouquetService;
     private final BouquetQueryService bouquetQueryService;
