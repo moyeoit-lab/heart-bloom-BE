@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Schema(description = "랜딩 질문 목록 응답")
+@Schema(description = "질문 목록 응답")
 public record GetQuestionLandingResponse(
-        @Schema(description = "질문 목록")
+        @Schema(description = "꽃다발 타입에 맞게 정렬된 질문 목록")
         List<QuestionSummary> questions
 ) {
 
@@ -45,7 +45,7 @@ public record GetQuestionLandingResponse(
             @Schema(description = "질문 필수/선택 여부", example = "REQUIRED")
             QuestionAnswerType answerType,
 
-            @Schema(description = "질문 옵션 목록")
+            @Schema(description = "질문 옵션 목록. 옵션이 없는 질문은 빈 배열로 반환됩니다.")
             List<QuestionOptionSummary> options
     ) {
 

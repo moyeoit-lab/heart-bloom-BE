@@ -24,7 +24,10 @@ public interface BouquetReceiverApi {
             @Parameter(description = "꽃다발 공유 링크 토큰") @PathVariable String token
     );
 
-    @Operation(summary = "수신자용 꽃다발 질문 목록 조회", description = "공유 링크 토큰으로 꽃다발 타입에 맞는 질문 목록과 옵션을 조회합니다.")
+    @Operation(
+            summary = "수신자용 꽃다발 질문 목록 조회",
+            description = "공유 링크로 진입한 비로그인 수신자가 link token만으로 해당 꽃다발 타입의 질문 목록과 옵션을 조회합니다. 링크가 만료되면 LINK_EXPIRED를 반환합니다."
+    )
     @GetMapping("/questions")
     ResponseEntity<ApiResponse<GetQuestionLandingResponse>> getQuestions(
             @Parameter(description = "꽃다발 공유 링크 토큰") @PathVariable String token

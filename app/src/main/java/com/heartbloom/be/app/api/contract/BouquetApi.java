@@ -36,10 +36,13 @@ public interface BouquetApi {
     @GetMapping("/count")
     ResponseEntity<ApiResponse<GetBouquetCountResponse>> getBouquetCount();
 
-    @Operation(summary = "내 꽃다발 질문 목록 조회", description = "로그인 사용자가 접근 가능한 꽃다발의 질문 목록과 옵션을 조회합니다.")
+    @Operation(
+            summary = "내 꽃다발 질문 목록 조회",
+            description = "로그인 사용자가 bouquetId로 자신이 만들었거나 받은 꽃다발의 질문 목록과 옵션을 조회합니다. 사용자가 해당 꽃다발의 USER 발신자 또는 USER 수신자가 아니면 ACCESS_DENIED를 반환합니다."
+    )
     @GetMapping("/{bouquetId}/questions")
     ResponseEntity<ApiResponse<GetQuestionLandingResponse>> getBouquetQuestions(
-            @Parameter(description = "꽃다발 ID", example = "1") @PathVariable Long bouquetId,
+            @Parameter(description = "조회할 꽃다발 ID", example = "1") @PathVariable Long bouquetId,
             @Parameter(hidden = true) AccessUser user
     );
 
