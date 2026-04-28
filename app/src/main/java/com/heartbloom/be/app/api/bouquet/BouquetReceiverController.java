@@ -5,9 +5,11 @@ import com.heartbloom.be.app.api.bouquet.response.GetBouquetForReceiverResponse;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetQuestionAnswersResponse;
 import com.heartbloom.be.app.api.contract.BouquetReceiverApi;
 import com.heartbloom.be.app.api.exception.response.ApiResponse;
+import com.heartbloom.be.app.api.question.response.GetQuestionLandingResponse;
 import com.heartbloom.be.app.security.access.AccessUser;
 import com.heartbloom.be.app.security.access.RequestUser;
 import com.heartbloom.be.app.service.bouquet.BouquetService;
+import com.heartbloom.be.app.service.question.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +20,19 @@ import org.springframework.web.bind.annotation.*;
 public class BouquetReceiverController implements BouquetReceiverApi {
 
     private final BouquetService bouquetService;
+    private final QuestionService questionService;
 
     /* 수신자용 부케 정보 조회 (비로그인 허용) */
     @GetMapping
     public ResponseEntity<ApiResponse<GetBouquetForReceiverResponse>> getBouquet(@PathVariable String token) {
         ApiResponse<GetBouquetForReceiverResponse> response = ApiResponse.success(bouquetService.getBouquetForReceiver(token));
+        return ResponseEntity.ok(response);
+    }
+
+    /* 수신자용 부케 질문 목록 조회 (비로그인 허용) */
+    @GetMapping("/questions")
+    public ResponseEntity<ApiResponse<GetQuestionLandingResponse>> getQuestions(@PathVariable String token) {
+        ApiResponse<GetQuestionLandingResponse> response = ApiResponse.success(questionService.getLandingQuestions(token));
         return ResponseEntity.ok(response);
     }
 

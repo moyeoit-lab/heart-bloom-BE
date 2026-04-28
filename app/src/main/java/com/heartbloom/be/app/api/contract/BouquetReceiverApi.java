@@ -4,6 +4,7 @@ import com.heartbloom.be.app.api.bouquet.request.CompleteBouquetRequest;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetForReceiverResponse;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetQuestionAnswersResponse;
 import com.heartbloom.be.app.api.exception.response.ApiResponse;
+import com.heartbloom.be.app.api.question.response.GetQuestionLandingResponse;
 import com.heartbloom.be.app.security.access.AccessUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,6 +21,12 @@ public interface BouquetReceiverApi {
     @Operation(summary = "수신자용 꽃다발 조회", description = "공유 링크 토큰으로 수신자에게 보여줄 꽃다발 정보를 조회합니다.")
     @GetMapping
     ResponseEntity<ApiResponse<GetBouquetForReceiverResponse>> getBouquet(
+            @Parameter(description = "꽃다발 공유 링크 토큰") @PathVariable String token
+    );
+
+    @Operation(summary = "수신자용 꽃다발 질문 목록 조회", description = "공유 링크 토큰으로 꽃다발 타입에 맞는 질문 목록과 옵션을 조회합니다.")
+    @GetMapping("/questions")
+    ResponseEntity<ApiResponse<GetQuestionLandingResponse>> getQuestions(
             @Parameter(description = "꽃다발 공유 링크 토큰") @PathVariable String token
     );
 

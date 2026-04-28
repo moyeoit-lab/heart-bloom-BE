@@ -5,9 +5,13 @@ import com.heartbloom.be.app.api.bouquet.request.CompleteBouquetRequest;
 import com.heartbloom.be.app.api.bouquet.request.CreateBouquetAnswerRequest;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetForReceiverResponse;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetQuestionAnswersResponse;
+import com.heartbloom.be.app.api.question.response.GetQuestionLandingResponse;
 import com.heartbloom.be.app.security.access.RequestUserArgumentResolver;
 import com.heartbloom.be.app.service.bouquet.BouquetService;
+import com.heartbloom.be.app.service.question.QuestionService;
 import com.heartbloom.be.core.model.domain.answer.enumerate.BouquetAnswerType;
+import com.heartbloom.be.core.model.domain.question.Question;
+import com.heartbloom.be.core.model.domain.question.enumerate.QuestionAnswerType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,6 +41,9 @@ class BouquetReceiverControllerTest {
     @Mock
     private BouquetService bouquetService;
 
+    @Mock
+    private QuestionService questionService;
+
     @InjectMocks
     private BouquetReceiverController bouquetReceiverController;
 
@@ -61,6 +68,28 @@ class BouquetReceiverControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.senderName").value("Sender"))
                 .andExpect(jsonPath("$.data.senderAnswers").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("부케 토큰으로 수신자용 질문 목록을 조회할 수 있다")
+    void getQuestions() throws Exception {
+        // given
+        String token = "test-token";
+        Question question = Question.builder()
+                .id(1L)
+                .title("처음 단둘이 있었던 때")
+                .answerType(QuestionAnswerType.REQUIRED)
+                .build();
+        given(questionService.getLandingQuestions(token))
+                .willReturn(GetQuestionLandingResponse.from(List.of(question)));
+
+        // when & then
+        mockMvc.perform(get("/api/v1/bouquets/links/{token}/questions", token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.questions[0].questionId").value(1L))
+                .andExpect(jsonPath("$.data.questions[0].title").value("처음 단둘이 있었던 때"))
+                .andExpect(jsonPath("$.data.questions[0].options").isArray());
     }
 
     @Test
