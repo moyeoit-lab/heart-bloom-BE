@@ -3,6 +3,7 @@ package com.heartbloom.be.app.service.question;
 import com.heartbloom.be.app.api.question.response.GetQuestionLandingResponse;
 import com.heartbloom.be.app.application.bouquet.implementation.BouquetLinkManager;
 import com.heartbloom.be.app.application.bouquet.implementation.BouquetManager;
+import com.heartbloom.be.app.security.access.AuthenticateUser;
 import com.heartbloom.be.core.model.domain.bouquet.Bouquet;
 import com.heartbloom.be.core.model.domain.bouquet.BouquetLink;
 import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetLinkStatus;
@@ -111,5 +112,38 @@ class QuestionServiceTest {
         assertThat(response.questions().get(0).questionId()).isEqualTo(5L);
         assertThat(response.questions().get(0).options()).hasSize(1);
         assertThat(response.questions().get(0).options().get(0).optionText()).isEqualTo("옵션");
+    }
+
+    @Test
+    @DisplayName("로그인 사용자가 접근 가능한 부케 ID로 질문과 옵션을 조회한다")
+    void getBouquetQuestions() {
+        // given
+        Long bouquetId = 10L;
+        AuthenticateUser user = new AuthenticateUser(1L, "Sender", "sender@test.com", false);
+        Bouquet bouquet = Bouquet.builder()
+                .id(bouquetId)
+                .senderId(1L)
+                .senderType(BouquetSenderType.USER)
+                .receiverType(BouquetReceiverType.GUEST)
+                .displayName("Sender")
+                .relationType(RelationType.ETC)
+                .bouquetTypeId(2L)
+                .build();
+        Question question = Question.builder()
+                .id(5L)
+                .title("가장 기억에 남은 상대의 한마디")
+                .answerType(QuestionAnswerType.REQUIRED)
+                .build();
+        given(bouquetManager.findById(bouquetId)).willReturn(Optional.of(bouquet));
+        given(questionRepository.findByBouquetTypeId(2L)).willReturn(List.of(question));
+        given(questionRepository.findOptionsByQuestionIds(List.of(5L))).willReturn(List.of());
+
+        // when
+        GetQuestionLandingResponse response = questionService.getBouquetQuestions(bouquetId, user);
+
+        // then
+        assertThat(response.questions()).hasSize(1);
+        assertThat(response.questions().get(0).questionId()).isEqualTo(5L);
+        assertThat(response.questions().get(0).options()).isEmpty();
     }
 }

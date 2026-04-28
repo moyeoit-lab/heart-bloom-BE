@@ -6,10 +6,12 @@ import com.heartbloom.be.app.api.bouquet.response.GetBouquetCountResponse;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetDisplayStandResponse;
 import com.heartbloom.be.app.api.contract.BouquetApi;
 import com.heartbloom.be.app.api.exception.response.ApiResponse;
+import com.heartbloom.be.app.api.question.response.GetQuestionLandingResponse;
 import com.heartbloom.be.app.security.access.AccessUser;
 import com.heartbloom.be.app.security.access.RequestUser;
 import com.heartbloom.be.app.service.bouquet.BouquetQueryService;
 import com.heartbloom.be.app.service.bouquet.BouquetService;
+import com.heartbloom.be.app.service.question.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,7 @@ public class BouquetController implements BouquetApi {
 
     private final BouquetService bouquetService;
     private final BouquetQueryService bouquetQueryService;
+    private final QuestionService questionService;
 
     /**
      * 꽃다발 생성
@@ -47,6 +50,14 @@ public class BouquetController implements BouquetApi {
     public ResponseEntity<ApiResponse<GetBouquetCountResponse>> getBouquetCount() {
         GetBouquetCountResponse result = bouquetQueryService.getBouquetCount();
         ApiResponse<GetBouquetCountResponse> response = ApiResponse.success(result);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{bouquetId}/questions")
+    public ResponseEntity<ApiResponse<GetQuestionLandingResponse>> getBouquetQuestions(@PathVariable Long bouquetId,
+                                                                                      @RequestUser AccessUser user) {
+        GetQuestionLandingResponse result = questionService.getBouquetQuestions(bouquetId, user);
+        ApiResponse<GetQuestionLandingResponse> response = ApiResponse.success(result);
         return ResponseEntity.ok(response);
     }
 
