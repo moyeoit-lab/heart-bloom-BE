@@ -33,7 +33,7 @@ public class BouquetQueryService {
                 .map(GetBouquetResponse::of)
                 .toList();
 
-        return new GetBouquetDisplayStandResponse(sent, received);
+        return new GetBouquetDisplayStandResponse(user.getName(), sent, received);
     }
 
     @Transactional(readOnly = true)
