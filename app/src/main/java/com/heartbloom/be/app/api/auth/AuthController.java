@@ -2,6 +2,7 @@ package com.heartbloom.be.app.api.auth;
 
 import com.heartbloom.be.app.api.auth.response.GetLoginUrlResponse;
 import com.heartbloom.be.app.api.auth.response.LoginResponse;
+import com.heartbloom.be.app.api.contract.AuthApi;
 import com.heartbloom.be.app.api.exception.response.ApiResponse;
 import com.heartbloom.be.app.service.auth.dto.TokenResult;
 import com.heartbloom.be.app.service.auth.AuthService;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements AuthApi {
 
     private final AuthService authService;
 
