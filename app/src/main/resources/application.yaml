@@ -63,7 +63,7 @@ jwt:
 
 bouquet:
   link:
-    prefix: ${DEV_BOUQUET_LINK_PREFIX:https://heart-bloom-fe.vercel.app/bouquet/}
+    prefix: ${DEV_BOUQUET_LINK_PREFIX:https://heart-blooming.site/bouquet/}
 
 ---
 # ==========================
@@ -80,4 +80,4 @@ jwt:
 
 bouquet:
   link:
-    prefix: ${BOUQUET_LINK_PREFIX:https://heart-bloom-fe.vercel.app/bouquet/}
+    prefix: ${BOUQUET_LINK_PREFIX:https://heart-blooming.site/bouquet/}
