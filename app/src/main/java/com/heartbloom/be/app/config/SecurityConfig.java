@@ -67,7 +67,8 @@ public class SecurityConfig {
         configuration.setAllowedOriginPatterns(List.of(
                 "http://localhost:*",
                 "http://127.0.0.1:*",
-                "https://heart-bloom-fe.vercel.app"
+                "https://heart-bloom-fe.vercel.app",
+                "https://www.heart-blooming.site"
         ));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
