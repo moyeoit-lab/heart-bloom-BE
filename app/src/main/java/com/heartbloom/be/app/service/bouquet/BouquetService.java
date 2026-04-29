@@ -51,7 +51,7 @@ public class BouquetService {
     @Transactional
     public CreateBouquetResponse create(CreateBouquetRequest request, AccessUser user) {
         LocalDateTime now = timeProvider.now();
-        Long currentUserId = user instanceof AuthenticateUser ? user.getId() : null;
+        Long currentUserId = user.getId();
 
         // 1. 임시 토큰 생성
         String linkToken = linkTokenGenerator.generate();
