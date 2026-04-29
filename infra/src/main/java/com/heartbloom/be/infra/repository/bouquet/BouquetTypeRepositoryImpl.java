@@ -4,6 +4,7 @@ import com.heartbloom.be.core.model.domain.bouquet.BouquetType;
 import com.heartbloom.be.core.repository.domain.bouquet.BouquetTypeRepository;
 import com.heartbloom.be.infra.dao.jpa.bouquet.BouquetTypeJpaDao;
 import com.heartbloom.be.infra.entity.converter.BouquetTypeConverter;
+import com.heartbloom.be.infra.entity.domain.bouquet.BouquetTypeEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +19,12 @@ public class BouquetTypeRepositoryImpl implements BouquetTypeRepository {
     private final BouquetTypeJpaDao bouquetTypeJpaDao;
 
     @Override
+    public BouquetType save(BouquetType bouquetType) {
+        BouquetTypeEntity newBouquetTypeEntity = bouquetTypeJpaDao.save(BouquetTypeConverter.toEntity(bouquetType));
+        return BouquetTypeConverter.toModel(newBouquetTypeEntity);
+    }
+
+    @Override
     public Optional<BouquetType> findById(Long id) {
         return bouquetTypeJpaDao.findById(id)
                 .map(BouquetTypeConverter::toModel);
@@ -25,7 +32,7 @@ public class BouquetTypeRepositoryImpl implements BouquetTypeRepository {
 
     @Override
     public List<BouquetType> findAll() {
-        return bouquetTypeJpaDao.findALlByActive(true)
+        return bouquetTypeJpaDao.findAllByActive(true)
                 .stream()
                 .map(BouquetTypeConverter::toModel)
                 .collect(Collectors.toList());

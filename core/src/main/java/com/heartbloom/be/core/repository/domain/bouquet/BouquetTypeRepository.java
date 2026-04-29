@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface BouquetTypeRepository {
 
+    BouquetType save(BouquetType bouquetType);
+
     Optional<BouquetType> findById(Long id);
 
     List<BouquetType> findAll();

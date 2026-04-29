@@ -35,4 +35,11 @@ public class BouquetType {
         );
     }
 
+    public BouquetType disable(LocalDateTime now) {
+        return this.toBuilder()
+                .active(false)
+                .modifiedAt(now)
+                .build();
+    }
+
 }

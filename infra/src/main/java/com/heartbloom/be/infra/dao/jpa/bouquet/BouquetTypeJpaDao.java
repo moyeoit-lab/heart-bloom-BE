@@ -12,6 +12,6 @@ import java.util.List;
 public interface BouquetTypeJpaDao extends JpaRepository<BouquetTypeEntity, Long> {
 
     @Query("SELECT bt FROM BouquetTypeEntity bt WHERE bt.active = :active ORDER BY bt.id ASC")
-    List<BouquetTypeEntity> findALlByActive(@Param("active") boolean active);
+    List<BouquetTypeEntity> findAllByActive(@Param("active") boolean active);
 
 }
