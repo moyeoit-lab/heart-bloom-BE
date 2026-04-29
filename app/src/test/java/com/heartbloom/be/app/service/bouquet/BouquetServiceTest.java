@@ -4,6 +4,7 @@ import com.heartbloom.be.app.api.bouquet.request.CreateBouquetAnswerRequest;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetForReceiverResponse;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetQuestionAnswersResponse;
 import com.heartbloom.be.app.application.bouquet.implementation.*;
+import com.heartbloom.be.app.application.notification.implementation.NotificationManager;
 import com.heartbloom.be.app.application.user.implementation.UserManager;
 import com.heartbloom.be.app.security.access.AuthenticateUser;
 import com.heartbloom.be.app.security.access.AnonymousUser;
@@ -61,6 +62,8 @@ class BouquetServiceTest {
     private BouquetTypeManager bouquetTypeManager;
     @Mock
     private UserManager userManager;
+    @Mock
+    private NotificationManager notificationManager;
     @Mock
     private BouquetRepository bouquetRepository;
 
@@ -171,6 +174,7 @@ class BouquetServiceTest {
                     .isInstanceOf(ServiceException.class)
                     .hasFieldOrPropertyWithValue("errorCode", BouquetErrorCode.LINK_EXPIRED);
         }
+
     }
 
     @Nested
@@ -300,6 +304,65 @@ class BouquetServiceTest {
             verify(bouquetReceiverManager).updateReceiverName(receiver, "Receiver");
             verify(bouquetReceiverManager, never()).connectUser(any(), anyLong());
             verify(bouquetLinkManager).complete(any());
+        }
+
+        @Test
+        @DisplayName("회원이 보낸 꽃다발이 완료되면 발신자에게 완성 알림을 생성한다")
+        void create_notification_when_sender_is_user() {
+            // given
+            String token = "token";
+            Long bouquetId = 1L;
+            Long senderId = 200L;
+            AnonymousUser anonymousUser = new AnonymousUser();
+
+            BouquetLink link = BouquetLink.builder().id(1L).bouquetId(bouquetId).status(BouquetLinkStatus.ACTIVE).build();
+            Bouquet bouquet = Bouquet.builder()
+                    .id(bouquetId)
+                    .senderId(senderId)
+                    .senderType(BouquetSenderType.USER)
+                    .receiverType(BouquetReceiverType.GUEST)
+                    .build();
+            BouquetReceiver receiver = BouquetReceiver.builder().id(10L).build();
+            BouquetReceiver namedReceiver = receiver.toBuilder().receiverName("Receiver").build();
+
+            given(bouquetLinkManager.findByToken(token)).willReturn(Optional.of(link));
+            given(bouquetManager.findById(bouquetId)).willReturn(Optional.of(bouquet));
+            given(bouquetReceiverManager.findByBouquetLinkId(1L)).willReturn(Optional.of(receiver));
+            given(bouquetReceiverManager.updateReceiverName(receiver, "Receiver")).willReturn(namedReceiver);
+
+            // when
+            bouquetService.completeBouquet(token, "Receiver", List.of(), anonymousUser);
+
+            // then
+            verify(notificationManager).createBouquetCompletedIfAbsent(senderId, bouquetId);
+        }
+
+        @Test
+        @DisplayName("게스트가 보낸 꽃다발이 완료되면 완성 알림을 생성하지 않는다")
+        void skip_notification_when_sender_is_guest() {
+            // given
+            String token = "token";
+            AnonymousUser anonymousUser = new AnonymousUser();
+
+            BouquetLink link = BouquetLink.builder().id(1L).bouquetId(1L).status(BouquetLinkStatus.ACTIVE).build();
+            Bouquet bouquet = Bouquet.builder()
+                    .id(1L)
+                    .senderType(BouquetSenderType.GUEST)
+                    .receiverType(BouquetReceiverType.USER)
+                    .build();
+            BouquetReceiver receiver = BouquetReceiver.builder().id(10L).build();
+            BouquetReceiver namedReceiver = receiver.toBuilder().receiverName("Receiver").build();
+
+            given(bouquetLinkManager.findByToken(token)).willReturn(Optional.of(link));
+            given(bouquetManager.findById(1L)).willReturn(Optional.of(bouquet));
+            given(bouquetReceiverManager.findByBouquetLinkId(1L)).willReturn(Optional.of(receiver));
+            given(bouquetReceiverManager.updateReceiverName(receiver, "Receiver")).willReturn(namedReceiver);
+
+            // when
+            bouquetService.completeBouquet(token, "Receiver", List.of(), anonymousUser);
+
+            // then
+            verify(notificationManager, never()).createBouquetCompletedIfAbsent(anyLong(), anyLong());
         }
     }
 

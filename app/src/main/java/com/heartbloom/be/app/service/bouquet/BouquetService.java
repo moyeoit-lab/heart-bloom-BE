@@ -7,6 +7,7 @@ import com.heartbloom.be.app.api.bouquet.response.GetBouquetForReceiverResponse;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetQuestionAnswersResponse;
 import com.heartbloom.be.app.application.bouquet.implementation.*;
 import com.heartbloom.be.app.application.bouquet.implementation.generator.BouquetLinkTokenGenerator;
+import com.heartbloom.be.app.application.notification.implementation.NotificationManager;
 import com.heartbloom.be.app.application.user.implementation.UserManager;
 import com.heartbloom.be.app.security.access.AccessUser;
 import com.heartbloom.be.app.security.access.AuthenticateUser;
@@ -44,6 +45,7 @@ public class BouquetService {
     private final BouquetReceiverManager bouquetReceiverManager;
     private final BouquetTypeManager bouquetTypeManager;
     private final UserManager userManager;
+    private final NotificationManager notificationManager;
     private final BouquetRepository bouquetRepository;
 
     private final BouquetLinkTokenGenerator linkTokenGenerator;
@@ -173,6 +175,10 @@ public class BouquetService {
         }
 
         bouquetLinkManager.complete(link);
+
+        if (bouquet.getSenderType() == BouquetSenderType.USER) {
+            notificationManager.createBouquetCompletedIfAbsent(bouquet.getSenderId(), bouquet.getId());
+        }
     }
 
     @Transactional
