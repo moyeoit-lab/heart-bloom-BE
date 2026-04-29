@@ -71,10 +71,6 @@ bouquet:
 # ==========================
 spring.config.activate.on-profile: prod
 
-server:
-  servlet:
-    context-path: /heart-bloom
-
 jwt:
   secret: ${JWT_SECRET}
   access:
