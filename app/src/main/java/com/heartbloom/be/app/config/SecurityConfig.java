@@ -65,10 +65,12 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOriginPatterns(List.of(
-                "http://localhost:*",
-                "http://127.0.0.1:*",
-                "https://heart-bloom-fe.vercel.app",
-                "https://www.heart-blooming.site"
+                "http://localhost:*", // 로컬 개발 CORS
+                "http://127.0.0.1:*", // 로컬 개발 CORS
+                "https://heart-bloom-fe.vercel.app", // 개발 Vercel CORS
+                "https://heart-blooming.vercel.app", // 개발 Vercel CORS
+                "https://heart-blooming.site", // 운영 주소 CORS
+                "https://www.heart-blooming.site" // 운영 주소 CORS
         ));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
