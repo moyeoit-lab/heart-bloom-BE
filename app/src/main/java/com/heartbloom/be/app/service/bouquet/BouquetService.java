@@ -8,7 +8,6 @@ import com.heartbloom.be.app.api.bouquet.response.GetBouquetQuestionAnswersRespo
 import com.heartbloom.be.app.application.bouquet.implementation.*;
 import com.heartbloom.be.app.application.bouquet.implementation.generator.BouquetLinkTokenGenerator;
 import com.heartbloom.be.app.application.notification.implementation.NotificationManager;
-import com.heartbloom.be.app.application.user.implementation.UserManager;
 import com.heartbloom.be.app.security.access.AccessUser;
 import com.heartbloom.be.app.security.access.AuthenticateUser;
 import com.heartbloom.be.common.exception.ServiceException;
@@ -22,7 +21,6 @@ import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetLinkStatus;
 import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetReceiverType;
 import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetSenderType;
 import com.heartbloom.be.core.model.domain.receiver.BouquetReceiver;
-import com.heartbloom.be.core.model.domain.user.User;
 import com.heartbloom.be.core.repository.domain.bouquet.BouquetRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +42,6 @@ public class BouquetService {
     private final BouquetLinkManager bouquetLinkManager;
     private final BouquetReceiverManager bouquetReceiverManager;
     private final BouquetTypeManager bouquetTypeManager;
-    private final UserManager userManager;
     private final NotificationManager notificationManager;
     private final BouquetRepository bouquetRepository;
 
@@ -117,21 +114,10 @@ public class BouquetService {
         Bouquet bouquet = bouquetManager.findById(link.getBouquetId())
                 .orElseThrow(() -> new ServiceException(BouquetErrorCode.NOT_FOUND));
 
-        String senderName;
-        if (bouquet.getSenderType() == BouquetSenderType.USER) {
-            User sender = userManager.findById(bouquet.getSenderId())
-                    .orElseThrow(() -> new ServiceException(BouquetErrorCode.NOT_FOUND));
-            senderName = sender.getName();
-        } else {
-            BouquetReceiver senderProfile = bouquetReceiverManager.findById(bouquet.getSenderId())
-                    .orElseThrow(() -> new ServiceException(BouquetErrorCode.RECEIVER_NOT_FOUND));
-            senderName = senderProfile.getReceiverName();
-        }
-
         BouquetType bouquetType = bouquetTypeManager.findById(bouquet.getBouquetTypeId())
                 .orElseThrow(() -> new ServiceException(BouquetErrorCode.TYPE_NOT_FOUND));
 
-        return GetBouquetForReceiverResponse.of(senderName, bouquetType);
+        return GetBouquetForReceiverResponse.of(bouquet.getDisplayName(), bouquetType);
     }
 
     @Transactional(readOnly = true)

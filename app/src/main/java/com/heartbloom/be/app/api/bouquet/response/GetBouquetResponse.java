@@ -23,6 +23,9 @@ public record GetBouquetResponse (
         @Schema(description = "수신자 타입", example = "GUEST")
         BouquetReceiverType receiverType,
 
+        @Schema(description = "꽃다발 표시 이름", example = "하트")
+        String displayName,
+
         @Schema(description = "꽃다발 타입 ID", example = "1")
         Long bouquetTypeId,
 
@@ -44,6 +47,7 @@ public record GetBouquetResponse (
                 queryDto.senderType(),
                 queryDto.receiverId(),
                 queryDto.receiverType(),
+                queryDto.displayName(),
                 queryDto.bouquetTypeId(),
                 queryDto.bouquetName(),
                 queryDto.bouquetDescription(),

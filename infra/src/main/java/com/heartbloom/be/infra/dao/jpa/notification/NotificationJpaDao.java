@@ -20,17 +20,19 @@ public interface NotificationJpaDao extends JpaRepository<NotificationEntity, Lo
             SELECT new com.heartbloom.be.core.repository.domain.notification.dto.BouquetCompletionAlertQueryDto(
                 n.id,
                 b.id,
-                b.displayName,
+                br.receiverName,
                 bt.bouquetImageUrl,
                 n.createdAt
             )
             FROM NotificationEntity n
             JOIN BouquetEntity b ON b.id = n.bouquetId
+            JOIN BouquetReceiverEntity br ON br.bouquetId = b.id
             LEFT JOIN BouquetTypeEntity bt ON bt.id = b.bouquetTypeId
             WHERE n.userId = :userId
               AND n.type = :type
               AND n.status = :status
               AND b.deleted = false
+              AND br.receiverName IS NOT NULL
             ORDER BY n.createdAt DESC
             """)
     List<BouquetCompletionAlertQueryDto> queryUnreadBouquetCompletionAlerts(

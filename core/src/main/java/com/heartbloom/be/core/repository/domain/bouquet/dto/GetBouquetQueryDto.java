@@ -9,6 +9,7 @@ public record GetBouquetQueryDto (
         BouquetSenderType senderType,
         Long receiverId,
         BouquetReceiverType receiverType,
+        String displayName,
         Long bouquetTypeId,
         String bouquetName,
         String bouquetDescription,

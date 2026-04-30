@@ -5,7 +5,6 @@ import com.heartbloom.be.app.api.bouquet.response.GetBouquetForReceiverResponse;
 import com.heartbloom.be.app.api.bouquet.response.GetBouquetQuestionAnswersResponse;
 import com.heartbloom.be.app.application.bouquet.implementation.*;
 import com.heartbloom.be.app.application.notification.implementation.NotificationManager;
-import com.heartbloom.be.app.application.user.implementation.UserManager;
 import com.heartbloom.be.app.security.access.AuthenticateUser;
 import com.heartbloom.be.app.security.access.AnonymousUser;
 import com.heartbloom.be.common.exception.ServiceException;
@@ -21,8 +20,6 @@ import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetLinkStatus;
 import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetReceiverType;
 import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetSenderType;
 import com.heartbloom.be.core.model.domain.receiver.BouquetReceiver;
-import com.heartbloom.be.core.model.domain.user.User;
-import com.heartbloom.be.core.model.domain.user.enumerate.AuthProviderType;
 import com.heartbloom.be.core.repository.domain.bouquet.BouquetRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -61,8 +58,6 @@ class BouquetServiceTest {
     @Mock
     private BouquetTypeManager bouquetTypeManager;
     @Mock
-    private UserManager userManager;
-    @Mock
     private NotificationManager notificationManager;
     @Mock
     private BouquetRepository bouquetRepository;
@@ -93,11 +88,6 @@ class BouquetServiceTest {
                     .bouquetTypeId(bouquetTypeId).deleted(false)
                     .createdAt(now).modifiedAt(now).build();
 
-            User sender = User.builder()
-                    .id(senderId).name("Sender").email("sender@email.com")
-                    .providerType(AuthProviderType.KAKAO).deleted(false)
-                    .createdAt(now).modifiedAt(now).build();
-
             BouquetType type = BouquetType.builder()
                     .id(bouquetTypeId).bouquetName("Rose").bouquetDescription("Desc")
                     .bouquetImageUrl("url").active(true)
@@ -105,20 +95,19 @@ class BouquetServiceTest {
 
             given(bouquetLinkManager.findByToken(token)).willReturn(Optional.of(link));
             given(bouquetManager.findById(bouquetId)).willReturn(Optional.of(bouquet));
-            given(userManager.findById(senderId)).willReturn(Optional.of(sender));
             given(bouquetTypeManager.findById(bouquetTypeId)).willReturn(Optional.of(type));
 
             // when
             GetBouquetForReceiverResponse response = bouquetService.getBouquetForReceiver(token);
 
             // then
-            assertThat(response.senderName()).isEqualTo("Sender");
+            assertThat(response.senderName()).isEqualTo("DisplayName");
             assertThat(response.bouquetName()).isEqualTo("Rose");
             verify(bouquetAnswerManager, never()).findByBouquetId(anyLong());
         }
 
         @Test
-        @DisplayName("답례 부케의 발신자가 게스트이면 BouquetReceiver ID로 발신자 이름을 조회한다")
+        @DisplayName("답례 부케의 발신자가 게스트여도 부케 표시 이름을 반환한다")
         void guestSender() {
             // given
             String token = "valid-token";
@@ -139,11 +128,6 @@ class BouquetServiceTest {
                     .bouquetTypeId(bouquetTypeId).deleted(false)
                     .createdAt(now).modifiedAt(now).build();
 
-            BouquetReceiver senderProfile = BouquetReceiver.builder()
-                    .id(senderReceiverId)
-                    .receiverName("Guest Sender")
-                    .build();
-
             BouquetType type = BouquetType.builder()
                     .id(bouquetTypeId).bouquetName("Rose").bouquetDescription("Desc")
                     .bouquetImageUrl("url").active(true)
@@ -151,14 +135,13 @@ class BouquetServiceTest {
 
             given(bouquetLinkManager.findByToken(token)).willReturn(Optional.of(link));
             given(bouquetManager.findById(bouquetId)).willReturn(Optional.of(bouquet));
-            given(bouquetReceiverManager.findById(senderReceiverId)).willReturn(Optional.of(senderProfile));
             given(bouquetTypeManager.findById(bouquetTypeId)).willReturn(Optional.of(type));
             // when
             GetBouquetForReceiverResponse response = bouquetService.getBouquetForReceiver(token);
 
             // then
-            assertThat(response.senderName()).isEqualTo("Guest Sender");
-            verify(bouquetReceiverManager).findById(senderReceiverId);
+            assertThat(response.senderName()).isEqualTo("DisplayName");
+            verify(bouquetReceiverManager, never()).findById(senderReceiverId);
         }
 
         @Test
