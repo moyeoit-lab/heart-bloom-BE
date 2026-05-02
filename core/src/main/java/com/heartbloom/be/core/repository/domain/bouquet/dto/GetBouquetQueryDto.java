@@ -13,5 +13,7 @@ public record GetBouquetQueryDto (
         Long bouquetTypeId,
         String bouquetName,
         String bouquetDescription,
-        String bouquetImageUrl
+        String bouquetImageUrl,
+        Boolean myAnswered,
+        Boolean counterpartAnswered
 ) {}

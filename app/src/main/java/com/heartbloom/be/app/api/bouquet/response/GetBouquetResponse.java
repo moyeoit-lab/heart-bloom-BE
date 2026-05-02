@@ -36,11 +36,23 @@ public record GetBouquetResponse (
         String bouquetDescription,
 
         @Schema(description = "꽃다발 이미지 URL")
-        String bouquetImageUrl
+        String bouquetImageUrl,
+
+        @Schema(description = "현재 조회자 답변 완료 여부", example = "true")
+        Boolean myAnswered,
+
+        @Schema(description = "상대방 답변 완료 여부", example = "false")
+        Boolean counterpartAnswered,
+
+        @Schema(description = "현재 조회자 기준 답변 상태", example = "WAITING_FOR_COUNTERPART_ANSWER")
+        BouquetAnswerStatus answerStatus
 
 ) {
 
     public static GetBouquetResponse of(GetBouquetQueryDto queryDto) {
+        boolean myAnswered = Boolean.TRUE.equals(queryDto.myAnswered());
+        boolean counterpartAnswered = Boolean.TRUE.equals(queryDto.counterpartAnswered());
+
         return new GetBouquetResponse(
                 queryDto.bouquetId(),
                 queryDto.senderId(),
@@ -51,7 +63,10 @@ public record GetBouquetResponse (
                 queryDto.bouquetTypeId(),
                 queryDto.bouquetName(),
                 queryDto.bouquetDescription(),
-                queryDto.bouquetImageUrl()
+                queryDto.bouquetImageUrl(),
+                myAnswered,
+                counterpartAnswered,
+                BouquetAnswerStatus.of(myAnswered, counterpartAnswered)
         );
     }
 

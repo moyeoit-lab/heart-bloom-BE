@@ -3,9 +3,12 @@ package com.heartbloom.be.infra.dao.querydsl;
 import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetReceiverType;
 import com.heartbloom.be.core.model.domain.bouquet.enumerate.BouquetSenderType;
 import com.heartbloom.be.core.repository.domain.bouquet.dto.GetBouquetQueryDto;
+import com.heartbloom.be.infra.entity.domain.answer.QBouquetAnswerEntity;
 import com.heartbloom.be.infra.entity.domain.bouquet.QBouquetEntity;
 import com.heartbloom.be.infra.entity.domain.bouquet.QBouquetTypeEntity;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -20,8 +23,13 @@ public class BouquetQueryDao {
     private final JPAQueryFactory queryFactory;
     private final QBouquetEntity bouquet = QBouquetEntity.bouquetEntity;
     private final QBouquetTypeEntity bouquetType = QBouquetTypeEntity.bouquetTypeEntity;
+    private final QBouquetAnswerEntity senderAnswer = new QBouquetAnswerEntity("senderAnswer");
+    private final QBouquetAnswerEntity receiverAnswer = new QBouquetAnswerEntity("receiverAnswer");
 
     public List<GetBouquetQueryDto> querySentBouquets(Long senderId, BouquetSenderType senderType) {
+        BooleanExpression hasSenderAnswer = hasAnswer("SENDER", senderAnswer);
+        BooleanExpression hasReceiverAnswer = hasAnswer("RECEIVER", receiverAnswer);
+
         return queryFactory
                 .select(Projections.constructor(GetBouquetQueryDto.class,
                         bouquet.id,
@@ -33,7 +41,9 @@ public class BouquetQueryDao {
                         bouquet.bouquetTypeId,
                         bouquetType.bouquetName,
                         bouquetType.bouquetDescription,
-                        bouquetType.bouquetImageUrl
+                        bouquetType.bouquetImageUrl,
+                        hasSenderAnswer,
+                        hasReceiverAnswer
                 ))
                 .from(bouquet)
                 .leftJoin(bouquetType).on(bouquet.bouquetTypeId.eq(bouquetType.id))
@@ -46,6 +56,9 @@ public class BouquetQueryDao {
     }
 
     public List<GetBouquetQueryDto> queryReceivedBouquets(Long receiverId, BouquetReceiverType receiverType) {
+        BooleanExpression hasSenderAnswer = hasAnswer("SENDER", senderAnswer);
+        BooleanExpression hasReceiverAnswer = hasAnswer("RECEIVER", receiverAnswer);
+
         return queryFactory
                 .select(Projections.constructor(GetBouquetQueryDto.class,
                         bouquet.id,
@@ -57,7 +70,9 @@ public class BouquetQueryDao {
                         bouquet.bouquetTypeId,
                         bouquetType.bouquetName,
                         bouquetType.bouquetDescription,
-                        bouquetType.bouquetImageUrl
+                        bouquetType.bouquetImageUrl,
+                        hasReceiverAnswer,
+                        hasSenderAnswer
                 ))
                 .from(bouquet)
                 .leftJoin(bouquetType).on(bouquet.bouquetTypeId.eq(bouquetType.id))
@@ -67,6 +82,17 @@ public class BouquetQueryDao {
                         bouquet.deleted.isFalse()
                 )
                 .fetch();
+    }
+
+    private BooleanExpression hasAnswer(String respondentType, QBouquetAnswerEntity answer) {
+        return JPAExpressions
+                .selectOne()
+                .from(answer)
+                .where(
+                        answer.bouquetId.eq(bouquet.id),
+                        answer.respondentType.eq(respondentType)
+                )
+                .exists();
     }
 
 }
