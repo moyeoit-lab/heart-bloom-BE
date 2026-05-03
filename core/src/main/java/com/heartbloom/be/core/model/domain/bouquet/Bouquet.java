@@ -52,4 +52,10 @@ public class Bouquet {
         );
     }
 
+    public Bouquet setReceiver(Long receiverId) {
+        return this.toBuilder()
+                .receiverId(receiverId)
+                .build();
+    }
+
 }

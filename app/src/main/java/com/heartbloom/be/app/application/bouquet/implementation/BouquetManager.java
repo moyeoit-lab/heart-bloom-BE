@@ -37,6 +37,10 @@ public class BouquetManager {
         return bouquetRepository.save(bouquet);
     }
 
+    public Bouquet update(Bouquet bouquet) {
+        return bouquetRepository.save(bouquet);
+    }
+
     public Optional<Bouquet> findById(Long id) {
         return bouquetRepository.findById(id);
     }
