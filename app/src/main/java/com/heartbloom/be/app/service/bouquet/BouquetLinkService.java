@@ -15,9 +15,9 @@ public class BouquetLinkService {
     private final BouquetLinkUrlGenerator urlGenerator;
 
     @Transactional(readOnly = true)
-    public String getBouquetLinkUrl(Long bouquetId) {
+    public String getBouquetLinkUrl(Long bouquetId, String origin) {
         BouquetLink link = bouquetLinkReader.readByBouquetId(bouquetId);
-        return urlGenerator.generate(link.getLinkToken());
+        return urlGenerator.generate(link.getLinkToken(), origin);
     }
 
 }

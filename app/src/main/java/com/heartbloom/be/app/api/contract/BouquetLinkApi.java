@@ -15,7 +15,8 @@ public interface BouquetLinkApi {
     @Operation(summary = "꽃다발 링크 URL 조회", description = "꽃다발 ID로 공유 가능한 링크 URL을 조회합니다.")
     @GetMapping("/{bouquetId}/url")
     ResponseEntity<ApiResponse<GetBouquetLinkUrlResponse>> getBouquetLinkUrl(
-            @Parameter(description = "꽃다발 ID", example = "1") @PathVariable Long bouquetId
+            @Parameter(description = "꽃다발 ID", example = "1") @PathVariable Long bouquetId,
+            @Parameter(hidden = true) String origin
     );
 
 }

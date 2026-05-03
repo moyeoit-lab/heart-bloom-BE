@@ -6,10 +6,7 @@ import com.heartbloom.be.app.api.exception.response.ApiResponse;
 import com.heartbloom.be.app.service.bouquet.BouquetLinkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,8 +19,9 @@ public class BouquetLinkController implements BouquetLinkApi {
      * 꽃다발 링크 URL 조회
      */
     @GetMapping("/{bouquetId}/url")
-    public ResponseEntity<ApiResponse<GetBouquetLinkUrlResponse>> getBouquetLinkUrl(@PathVariable Long bouquetId) {
-        String url = bouquetLinkService.getBouquetLinkUrl(bouquetId);
+    public ResponseEntity<ApiResponse<GetBouquetLinkUrlResponse>> getBouquetLinkUrl(@PathVariable Long bouquetId,
+                                                                                    @RequestHeader(value = "Origin", required = false) String origin) {
+        String url = bouquetLinkService.getBouquetLinkUrl(bouquetId, origin);
         ApiResponse<GetBouquetLinkUrlResponse> response = ApiResponse.success(new GetBouquetLinkUrlResponse(url));
         return ResponseEntity.ok(response);
     }

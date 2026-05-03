@@ -9,8 +9,11 @@ public class BouquetLinkUrlGenerator {
     @Value("${bouquet.link.prefix}")
     private String prefix;
 
-    public String generate(String linkToken) {
-        return prefix + linkToken;
+    private final String BOUQUET_LINK_PATH = "/bouquet/";
+
+    public String generate(String linkToken, String origin) {
+        String baseUrl = origin != null ? origin + BOUQUET_LINK_PATH : prefix;
+        return baseUrl + linkToken;
     }
 
 }
