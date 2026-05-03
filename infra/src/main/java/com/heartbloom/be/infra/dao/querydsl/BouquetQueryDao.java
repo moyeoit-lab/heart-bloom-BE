@@ -6,6 +6,8 @@ import com.heartbloom.be.core.repository.domain.bouquet.dto.GetBouquetQueryDto;
 import com.heartbloom.be.infra.entity.domain.answer.QBouquetAnswerEntity;
 import com.heartbloom.be.infra.entity.domain.bouquet.QBouquetEntity;
 import com.heartbloom.be.infra.entity.domain.bouquet.QBouquetTypeEntity;
+import com.heartbloom.be.infra.entity.domain.receiver.QBouquetReceiverEntity;
+import com.heartbloom.be.infra.entity.domain.user.QUserEntity;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
@@ -23,8 +25,10 @@ public class BouquetQueryDao {
     private final JPAQueryFactory queryFactory;
     private final QBouquetEntity bouquet = QBouquetEntity.bouquetEntity;
     private final QBouquetTypeEntity bouquetType = QBouquetTypeEntity.bouquetTypeEntity;
+    private final QBouquetReceiverEntity bouquetReceiver = QBouquetReceiverEntity.bouquetReceiverEntity;
     private final QBouquetAnswerEntity senderAnswer = new QBouquetAnswerEntity("senderAnswer");
     private final QBouquetAnswerEntity receiverAnswer = new QBouquetAnswerEntity("receiverAnswer");
+    private final QUserEntity user = QUserEntity.userEntity;
 
     public List<GetBouquetQueryDto> querySentBouquets(Long senderId, BouquetSenderType senderType) {
         BooleanExpression hasSenderAnswer = hasAnswer("SENDER", senderAnswer);
@@ -36,6 +40,7 @@ public class BouquetQueryDao {
                         bouquet.senderId,
                         bouquet.senderType,
                         bouquet.receiverId,
+                        bouquetReceiver.receiverName,
                         bouquet.receiverType,
                         bouquet.displayName,
                         bouquet.bouquetTypeId,
@@ -47,6 +52,7 @@ public class BouquetQueryDao {
                 ))
                 .from(bouquet)
                 .leftJoin(bouquetType).on(bouquet.bouquetTypeId.eq(bouquetType.id))
+                .leftJoin(bouquetReceiver).on(bouquet.receiverId.eq(bouquetReceiver.id))
                 .where(
                         bouquet.senderId.eq(senderId),
                         bouquet.senderType.eq(senderType),
@@ -65,6 +71,7 @@ public class BouquetQueryDao {
                         bouquet.senderId,
                         bouquet.senderType,
                         bouquet.receiverId,
+                        user.name,
                         bouquet.receiverType,
                         bouquet.displayName,
                         bouquet.bouquetTypeId,
@@ -76,6 +83,7 @@ public class BouquetQueryDao {
                 ))
                 .from(bouquet)
                 .leftJoin(bouquetType).on(bouquet.bouquetTypeId.eq(bouquetType.id))
+                .leftJoin(user).on(bouquet.receiverId.eq(user.id))
                 .where(
                         bouquet.receiverId.eq(receiverId),
                         bouquet.receiverType.eq(receiverType),

@@ -20,6 +20,9 @@ public record GetBouquetResponse (
         @Schema(description = "수신자 ID", example = "1")
         Long receiverId,
 
+        @Schema(description = "수신자 이름", example="홍길동")
+        String receiverName,
+
         @Schema(description = "수신자 타입", example = "GUEST")
         BouquetReceiverType receiverType,
 
@@ -58,6 +61,7 @@ public record GetBouquetResponse (
                 queryDto.senderId(),
                 queryDto.senderType(),
                 queryDto.receiverId(),
+                queryDto.receiverName(),
                 queryDto.receiverType(),
                 queryDto.displayName(),
                 queryDto.bouquetTypeId(),

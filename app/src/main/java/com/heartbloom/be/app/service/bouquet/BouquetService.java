@@ -159,7 +159,7 @@ public class BouquetService {
         if (currentUserId != null) {
             connectUserToBouquet(namedReceiver, bouquet, currentUserId);
         }
-
+        bouquetManager.update(bouquet.setReceiver(receiver.getId()));
         bouquetLinkManager.complete(link);
 
         if (bouquet.getSenderType() == BouquetSenderType.USER) {
