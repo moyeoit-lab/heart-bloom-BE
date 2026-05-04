@@ -12,13 +12,17 @@ public record GetBouquetForReceiverResponse(
         String bouquetName,
 
         @Schema(description = "꽃다발 이미지 URL")
-        String bouquetImageUrl
+        String bouquetImageUrl,
+
+        @Schema(description = "답변 완료 여부")
+        boolean isCompleted
 ) {
-    public static GetBouquetForReceiverResponse of(String senderName, BouquetType bouquetType) {
+    public static GetBouquetForReceiverResponse of(String senderName, BouquetType bouquetType, boolean isCompleted) {
         return new GetBouquetForReceiverResponse(
                 senderName,
                 bouquetType.getBouquetName(),
-                bouquetType.getBouquetImageUrl()
+                bouquetType.getBouquetImageUrl(),
+                isCompleted
         );
     }
 }

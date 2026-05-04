@@ -117,7 +117,8 @@ public class BouquetService {
         BouquetType bouquetType = bouquetTypeManager.findById(bouquet.getBouquetTypeId())
                 .orElseThrow(() -> new ServiceException(BouquetErrorCode.TYPE_NOT_FOUND));
 
-        return GetBouquetForReceiverResponse.of(bouquet.getDisplayName(), bouquetType);
+        boolean isCompleted = link.getStatus() == BouquetLinkStatus.COMPLETED;
+        return GetBouquetForReceiverResponse.of(bouquet.getDisplayName(), bouquetType, isCompleted);
     }
 
     @Transactional(readOnly = true)
